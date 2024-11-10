@@ -1,9 +1,9 @@
-const { home } = require('../controllers/home');
+const { verificar_chamados } = require('../controllers/verificar_chamados');
 
 module.exports = {
-  home: (app) => {
+  verificar_chamados: (app) => {
     app.get('/', function (req, res) {
-      home(app, req, res);
+      verificar_chamados(app, req, res);
     });
   }
 }

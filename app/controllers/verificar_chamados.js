@@ -1,13 +1,12 @@
 const dbConnection = require('../../config/dbConnection');
-const { teste } = require('../models/home');
+const { teste } = require('../models/verificar_chamados');
 
-module.exports.home = (app, req, res) => {
-  //aqui vamos fazer a chamada para o model do banco de dados.
-  console.log('[Controller Home]');
+module.exports.verificar_chamados = (app, req, res) => {
+  console.log('[Controller verificar_chamados]');
   dbConn = dbConnection();
   teste(dbConn, (error, result) => {
     console.log(result);
-    res.render('home.ejs', { tickets: result });
+    res.render('verificar_chamados.ejs', { tickets: result });
   });
 };
 
