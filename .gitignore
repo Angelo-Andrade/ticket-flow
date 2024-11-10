@@ -18,3 +18,4 @@ Thumbs.db      # Arquivo do Windows
 node_modules/
 .env
 npm-debug.log*
+config/
