@@ -3,7 +3,7 @@ const dbConnection = require('../../config/dbConnection');
 module.exports = {
   verificar_chamados_todos: (dbConnection, callback) => {
     console.log("[Model verificar_chamados]");
-    const sql = 'select * from;';
+    const sql = 'select * from chamado;';
     dbConnection.query(sql, callback);
   },
 

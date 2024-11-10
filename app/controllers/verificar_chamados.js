@@ -6,11 +6,12 @@ module.exports.verificar_chamados_todos = (app, req, res) => {
   dbConn = dbConnection();
   verificar_chamados_todos(dbConn, (error, result) => {
     if(error) {
-
+      console.log(error);
     }
     else {
       console.log(result);
       res.render('verificar_chamados.ejs', { tickets: result });
+
     }
   });
 };
