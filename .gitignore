@@ -1,0 +1,20 @@
+# Ignorar arquivos de configuração e temporários
+*.log          # Todos os arquivos com extensão .log
+*.tmp          # Todos os arquivos com extensão .tmp
+
+# Ignorar diretórios específicos
+node_modules/  # Pasta node_modules em projetos Node.js
+dist/          # Pasta dist para arquivos de build
+.cache/        # Cache
+
+# Ignorar arquivos de sistema
+.DS_Store      # Arquivo do macOS
+Thumbs.db      # Arquivo do Windows
+
+# Ignorar variáveis de ambiente e configurações locais
+.env           # Arquivo de variáveis de ambiente
+
+
+node_modules/
+.env
+npm-debug.log*
