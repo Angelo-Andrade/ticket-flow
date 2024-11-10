@@ -13,16 +13,17 @@
         <h1 class="title">TicketFlow</h1>
         <form action="/filtrar" method="GET">
             <select name="status">
-                <option value="aberto">Aberto</option>
-                <option value="em andamento">Em Andamento</option>
-                <option value="fechado">Fechado</option>
+                <option value="aberto" <%= filter === 'aberto' ? 'selected' : '' %>>Aberto</option>
+                <option value="em andamento" <%= filter === 'em andamento' ? 'selected' : '' %>>Em Andamento</option>
+                <option value="fechado" <%= filter === 'fechado' ? 'selected' : '' %>>Fechado</option>
             </select>
             <button type="submit">Filtrar</button>
         </form>
+        <a href="/"><button>Remover filtro</button></a>
         <div class="div-tickets">
             <% if (tickets && tickets.length > 0) { %>
                 <% tickets.forEach(function(ticket) { %>
-                    <div class="tickets">
+                    <div class="div-ticket">
                         <h2><%= ticket.id_chamado %></h2>
                         <p><%= ticket.descricao %></p>
                 <% }); %>

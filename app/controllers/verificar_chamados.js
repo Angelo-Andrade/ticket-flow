@@ -1,12 +1,27 @@
 const dbConnection = require('../../config/dbConnection');
-const { teste } = require('../models/verificar_chamados');
+const { verificar_chamados_todos, verificar_chamados_filtrados } = require('../models/verificar_chamados');
 
-module.exports.verificar_chamados = (app, req, res) => {
+module.exports.verificar_chamados_todos = (app, req, res) => {
   console.log('[Controller verificar_chamados]');
   dbConn = dbConnection();
-  teste(dbConn, (error, result) => {
+  verificar_chamados_todos(dbConn, (error, result) => {
+    if(error) {
+
+    }
+    else {
+      console.log(result);
+      res.render('verificar_chamados.ejs', { tickets: result });
+    }
+  });
+};
+
+module.exports.verificar_chamados_filtrados = (app, req, res) => {
+  console.log('[Controller verificar_chamados]');
+  dbConn = dbConnection();
+  const filter = req.query.status;
+  verificar_chamados_filtrados(dbConn, filter, (error, result) => {
     console.log(result);
-    res.render('verificar_chamados.ejs', { tickets: result });
+    res.render('verificar_filtrados.ejs', { tickets: result, filter: filter });
   });
 };
 
