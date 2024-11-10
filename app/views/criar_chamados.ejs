@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="utf-8" />
+    <title>TicketFlow</title>
+    <link rel="stylesheet" type="text/css" href="styles/home.css" />
+
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title">TicketFlow</h1>
+        <div class="div-tickets">
+            <div class="chamado-form">
+                <form action="/criar_chamado" method="POST">
+                    <label for="descricao">Descrição:</label><br>
+                    <textarea id="descricao" name="descricao" rows="3" cols="50" required></textarea><br><br>
+
+                    <label for="urgencia">Urgência:</label><br>
+                    <select id="urgencia" name="urgencia" required>
+                        <option value="baixa">Baixa</option>
+                        <option value="media">Média</option>
+                        <option value="alta">Alta</option>
+                    </select><br><br>
+
+                    <label for="categoria">Categoria:</label><br>
+                    <select id="categoria" name="id_categoria_chamado" required>
+                        <!-- Gera as opções a partir das categorias que vieram do banco -->
+                        <% categorias.forEach(function(categoria) { %>
+                            <option value="<%= categoria.id_categoria_chamado %>"><%= categoria.descricao %></option>
+                        <% }); %>
+                    </select><br><br>
+
+                    <input type="submit" value="Enviar">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+</html>
