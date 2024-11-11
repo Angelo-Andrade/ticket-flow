@@ -18,6 +18,7 @@ module.exports = {
       criar_chamados(app, req, res);
     });
   },
+  
   render_criar_chamados: (app) => {
     app.get('/criar_chamados', function (req, res) {
       render_criar_chamados(app, req, res);

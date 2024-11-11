@@ -1,14 +1,108 @@
 <!DOCTYPE html>
-<html lang="pt">
-
+<html lang="pt-br">
 <head>
-    <meta charset="utf-8" />
-    <title>TicketFlow</title>
-    <link rel="stylesheet" type="text/css" href="styles/home.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chamados em Aberto</title>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+    <link rel="stylesheet" href="styles/styles-daltonicos.css" id="daltonic-style" disabled>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+        function adjustFontSize(action) {
+        const root = document.documentElement;
+        const currentFontSize = parseFloat(window.getComputedStyle(root).fontSize);
+        const step = 1; 
 
+        if (action === 'increase') {
+            root.style.fontSize = (currentFontSize + step) + 'px';
+        } else if (action === 'decrease') {
+            root.style.fontSize = (currentFontSize - step) + 'px';
+        }
+    }
+        function toggleMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            const body = document.body;
+
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                body.classList.remove('menu-open');
+            } else {
+                sidebar.classList.add('open');
+                body.classList.add('menu-open');
+            }
+        }
+
+        function confirmarCancelamento(chamadoId, elemento) {
+            if (confirm('Tem certeza de que deseja cancelar este chamado?')) {
+                elemento.parentElement.remove();
+                
+                // Redireciona para a página de histórico de chamados após um curto atraso
+                setTimeout(function() {
+                    window.location.href = 'historico.html';
+                }, 100); // 100 milissegundos de atraso para garantir a remoção do elemento
+            }
+        }
+
+        function toggleDaltonicMode() {
+            const daltonicStyle = document.getElementById('daltonic-style');
+            const defaultStyle = document.getElementById('default-style');
+
+            if (daltonicStyle.disabled) {
+                daltonicStyle.disabled = false;
+                defaultStyle.disabled = true;
+            } else {
+                daltonicStyle.disabled = true;
+                defaultStyle.disabled = false;
+            }
+        }
+
+        function atualizarStatus(chamadoId, selectElement) {
+            const chamadoItem = document.getElementById(chamadoId);
+            const statusElement = chamadoItem.querySelector('.status');
+            statusElement.textContent = selectElement.value;
+
+            if (selectElement.value === "Fechado") {
+                // Remove o chamado da lista
+                chamadoItem.remove();
+            }
+        }
+    </script>
 </head>
-
 <body>
+
+    <header class="header">
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span>&#9776;</span>
+        </div>
+        <div class="user-info">
+            <i class="fas fa-user"></i> <span id="user-name">Sgt Monteiro</span>
+        </div>
+        <div class="header-icons">
+            <i class="fas fa-bell"></i><span class="notification-count"></span>
+            <i class="fas fa-question-circle"></i>
+            <i class="fas fa-cogs"></i>
+            <i class="fas fa-search"></i>
+        </div>
+        <div class="font-size-controls">
+            <button onclick="adjustFontSize('increase')">A+</button>
+            <button onclick="adjustFontSize('decrease')">A-</button>
+        </div>
+        <button class="color-blind-mode" onclick="toggleDaltonicMode()">Modo Daltônico</button>
+    </header>
+
+    <nav class="sidebar">
+        <ul>
+            <img src="https://logodownload.org/wp-content/uploads/2018/02/exercito-brasileiro-logo-2.png" alt="Logo do Exército Brasileiro" style="width: 50px; display: block; margin: 0 auto 20px;"></a>
+            <li><a href="/"><i class="fas fa-history icon"></i> <span>Histórico de Chamados</span></a></li>
+            <li><a href="/criar_chamados"><i class="fas fa-plus icon"></i> <span>Abrir Chamado</span></a></li>
+            <li><a href="/filtrar?status=aberto"><i class="fas fa-folder-open icon"></i> <span>Chamados em Aberto</span></a></li>
+            <li><a href="usuarios-cadastrados.html"><i class="fas fa-users icon"></i> <span>Usuários Cadastrados</span></a></li>
+            <li><a href="cadastrar-usuario.html"><i class="fas fa-user-plus icon"></i> <span>Cadastrar Novo Usuário</span></a></li>
+            <li><a href="logout.html"><i class="fas fa-sign-out-alt icon"></i> <span>Logout</span></a></li>
+        </ul>
+    </nav>
+    
     <div class="container">
         <h1 class="title">TicketFlow</h1>
         <div class="div-tickets">
@@ -32,7 +126,7 @@
                         <% }); %>
                     </select><br><br>
 
-                    <input type="submit" value="Enviar">
+                    <button type="submit">Enviar</button>
                 </form>
             </div>
         </div>
