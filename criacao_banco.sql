@@ -24,7 +24,7 @@ CREATE TABLE telefone (
 CREATE TABLE autenticacao (
  id_usuario INT PRIMARY KEY,
  senha VARCHAR(100) NOT NULL,
- FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+ FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 CREATE TABLE categoria_chamado (
  id_categoria_chamado INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,7 +39,7 @@ CREATE TABLE chamado (
  urgencia ENUM('baixa', 'media', 'alta') NOT NULL,
  id_usuario INT,
  id_categoria_chamado INT,
- FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+ FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
  FOREIGN KEY (id_categoria_chamado) REFERENCES
 categoria_chamado(id_categoria_chamado)
 );
