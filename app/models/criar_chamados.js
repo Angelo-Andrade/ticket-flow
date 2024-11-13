@@ -1,3 +1,5 @@
+const dbConnection = require('../../config/dbConnection');
+
 module.exports = {
     criar_chamados: (dbConnection, descricao, urgencia, id_categoria_chamado, callback) => {
         // Obter a data e hora atual no formato MySQL
@@ -6,14 +8,36 @@ module.exports = {
         // Criar a consulta SQL
         const sql = `INSERT INTO chamado 
                         (descricao, data_criacao, status_chamado, urgencia, id_usuario, id_categoria_chamado) 
-                        VALUES ('${descricao}', '${dataHoraAtual}', 'aberto', '${urgencia}', 2, '${id_categoria_chamado}');`;
+                        VALUES (?, ?, 'aberto', ?, 2, ?);`; // Parâmetros para evitar SQL Injection
         console.log(sql);
-        dbConnection.query(sql, callback);     
+
+        const connection = dbConnection(); // Obtendo a conexão
+        connection.query(
+            sql,
+            [descricao, dataHoraAtual, urgencia, id_categoria_chamado], // Passar os valores de forma segura
+            (error, results) => {
+                if (error) {
+                    console.error('Erro ao criar chamado:', error);
+                    callback(error, null); // Devolver erro para o callback
+                } else {
+                    callback(null, results); // Chamar callback com sucesso
+                }
+            }
+        );
     },
 
     getCategoriaChamados: (dbConnection, callback) => {
         const sql = `SELECT * FROM categoria_chamado;`;
         console.log(sql);
-        dbConnection.query(sql, callback); 
+
+        const connection = dbConnection(); // Obtendo a conexão
+        connection.query(sql, (error, results) => {
+            if (error) {
+                console.error('Erro ao obter categorias:', error);
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
     }
-}
+};
