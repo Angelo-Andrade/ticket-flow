@@ -67,6 +67,18 @@
                 chamadoItem.remove();
             }
         }
+
+        function alterarTipoInput() {
+            const filtroSelect = document.getElementById("filtro");
+            const inputValor = document.getElementById("valor");
+
+            if (filtroSelect.value === "c.data_criacao") {
+                inputValor.type = "date";
+            } else {
+                inputValor.type = "text";
+            }
+        }
+        window.onload = alterarTipoInput;
     </script>
 </head>
 <body>
@@ -102,19 +114,27 @@
             <li><a href="logout.html"><i class="fas fa-sign-out-alt icon"></i> <span>Logout</span></a></li>
         </ul>
     </nav>
-
+    
     <div class="container">
         <h1>Chamados</h1>
 
         <h2>Lista de Chamados</h2>
         <form action="/filtrar" method="GET">
-            <select name="status">
-                <option value="aberto">Aberto</option>
-                <option value="em andamento">Em Andamento</option>
-                <option value="fechado">Fechado</option>
+            <select name="filtro" id="filtro" onchange="alterarTipoInput()">
+                <option value="c.status_chamado" <%= filter === 'c.status_chamado' ? 'selected' : '' %>>Status</option>
+                <option value="c.descricao" <%= filter === 'c.descricao' ? 'selected' : '' %>>Descrição</option>
+                <option value="c.data_criacao" <%= filter === 'c.data_criacao' ? 'selected' : '' %>>Data</option>
+                <option value="c.urgencia" <%= filter === 'c.urgencia' ? 'selected' : '' %>>Urgência</option>
+                <option value="u.nome_guerra" <%= filter === 'u.nome_guerra' ? 'selected' : '' %>>Nome do usuário</option>
+                <option value="p.descricao" <%= filter === 'p.descricao' ? 'selected' : '' %>>Nome do posto</option>
+                <option value="cat_c.descricao" <%= filter === 'cat_c.descricao' ? 'selected' : '' %>>Categoria do chamado</option>
             </select>
+            <input type="text" placeholder="Digite o que deseja pesquisar" name="valor" id="valor" required>
             <button type="submit">Filtrar</button>
         </form>
+        <% if (filter) { %>
+            <a class="clean-filters" href="/"><button>Limpar filtro</button></a>
+        <% } %>
         <ul id="chamados-lista">
             <% if (tickets && tickets.length > 0) { %>
                 <% tickets.forEach(function(ticket) { %>
@@ -155,5 +175,5 @@
         -->
     </div>
 </body>
-</html>
 
+</html>

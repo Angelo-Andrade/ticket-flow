@@ -1,10 +1,11 @@
-const dbConnection = require('../../config/dbConnection');
+const  { dbConnection, closeConection } = require("../../config/dbConnection");
 const { criar_chamados, getCategoriaChamados } = require('../models/criar_chamados');
 
 
 module.exports.render_criar_chamados = (app, req, res) => {
     console.log('[Controller Home]]');
-    getCategoriaChamados(dbConnection, (error, result) => {
+    dbConn = dbConnection();
+    getCategoriaChamados(dbConn, (error, result) => {
         if (error) {
             console.error(error);
             return res.render('notfound.ejs');
@@ -12,6 +13,7 @@ module.exports.render_criar_chamados = (app, req, res) => {
         // Passa as categorias para a view
         res.render('criar_chamados.ejs', { categorias: result });
     });
+    closeConnection(dbConn);
 };
 
 module.exports.criar_chamados = (app, req, res) => {
@@ -24,11 +26,12 @@ module.exports.criar_chamados = (app, req, res) => {
     console.log('Urgência', urgencia);
   
     dbConn = dbConnection();
-    criar_chamados(dbConnection, descricao, urgencia, id_categoria_chamado, (error, result) => {
+    criar_chamados(dbConn, descricao, urgencia, id_categoria_chamado, (error, result) => {
       if (error) {
         console.error(error);
         return res.render('notfound.ejs');
       }
       res.redirect('/criar_chamados');
     });
+    closeConnection(dbConn);
   };

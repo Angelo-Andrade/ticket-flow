@@ -13,6 +13,7 @@ module.exports = {
       verificar_chamados_filtrados(app, req, res);
     });
   },
+  
   criar_chamados: (app) => {
     app.post('/criar_chamado', function (req, res) {
       criar_chamados(app, req, res);

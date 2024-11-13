@@ -1,5 +1,3 @@
-const dbConnection = require('../../config/dbConnection');
-
 module.exports = {
   verificar_chamados_todos: (dbConnection, callback) => {
     console.log("[Model verificar_chamados]");
@@ -27,9 +25,10 @@ module.exports = {
     dbConnection.query(sql, callback);
   },
 
-  verificar_chamados_filtrados: (dbConnection, filter, callback) => {
+  verificar_chamados_filtrados: (dbConnection, filter, filter_value, callback) => {
     console.log("[Model verificar_chamados]");
     console.log(filter);
+    console.log(typeof filter_value);
     const sql = `SELECT 
                     c.id_chamado, 
                     c.descricao AS descricao_chamado, 
@@ -48,7 +47,7 @@ module.exports = {
                 JOIN 
                     posto_grad p ON p.id_posto_grad = u.id_posto_grad
                 WHERE
-                  status_chamado = '${filter}'
+                  ${filter} LIKE '%${filter_value}%'
                 ORDER BY 
                   c.status_chamado ASC,
                   c.data_criacao ASC;`;
