@@ -1,5 +1,3 @@
-const dbConnection = require('../../config/dbConnection');
-
 module.exports = {
     criar_chamados: (dbConnection, descricao, urgencia, id_categoria_chamado, callback) => {
         // Obter a data e hora atual no formato MySQL
@@ -10,14 +8,12 @@ module.exports = {
                         (descricao, data_criacao, status_chamado, urgencia, id_usuario, id_categoria_chamado) 
                         VALUES ('${descricao}', '${dataHoraAtual}', 'aberto', '${urgencia}', 2, '${id_categoria_chamado}');`;
         console.log(sql);
-        const connection = dbConnection();  // Obtendo a conexão
-        connection.query(sql, callback);     
+        dbConnection.query(sql, callback);     
     },
 
     getCategoriaChamados: (dbConnection, callback) => {
         const sql = `SELECT * FROM categoria_chamado;`;
         console.log(sql);
-        const connection = dbConnection();  // Obtendo a conexão
-        connection.query(sql, callback); 
+        dbConnection.query(sql, callback); 
     }
 }
