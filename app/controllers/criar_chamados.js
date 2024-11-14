@@ -1,6 +1,6 @@
-const  { dbConnection, closeConection } = require("../../config/dbConnection");
+const dbConnection = require("../../config/dbConnection");
+const { closeConection } = require("../../config/dbConnection");
 const { criar_chamados, getCategoriaChamados } = require('../models/criar_chamados');
-
 
 module.exports.render_criar_chamados = (app, req, res) => {
     console.log('[Controller Home]]');
@@ -28,10 +28,15 @@ module.exports.criar_chamados = (app, req, res) => {
     dbConn = dbConnection();
     criar_chamados(dbConn, descricao, urgencia, id_categoria_chamado, (error, result) => {
       if (error) {
-        console.error(error);
-        return res.render('notfound.ejs');
-      }
+        console.error('Erro ao criar chamado:', error);
+        return res.status(500).render('notfound.ejs', {
+            errorMessage: 'Erro ao criar chamado: ' + error.sqlMessage
+        });
+    }
       res.redirect('/criar_chamados');
     });
     closeConnection(dbConn);
   };
+
+
+

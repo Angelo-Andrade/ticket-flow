@@ -27,8 +27,6 @@ module.exports = {
 
   verificar_chamados_filtrados: (dbConnection, filter, filter_value, callback) => {
     console.log("[Model verificar_chamados]");
-    console.log(filter);
-    console.log(typeof filter_value);
     const sql = `SELECT 
                     c.id_chamado, 
                     c.descricao AS descricao_chamado, 
