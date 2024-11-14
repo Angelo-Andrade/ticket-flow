@@ -7,9 +7,9 @@ module.exports.verificar_chamados_todos = (app, req, res) => {
   dbConn = dbConnection();
   verificar_chamados_todos(dbConn, (error, result) => {
     if (error) {
-      console.error('Erro ao verificar chamado:', error);
+      console.error('Erro ao buscar chamados:', error);
       return res.status(500).render('notfound.ejs', {
-          errorMessage: 'Erro ao verificar chamado: ' + error.sqlMessage
+          errorMessage: 'Erro ao buscar chamados: ' + error.sqlMessage
       });
   }
     else {
@@ -26,9 +26,17 @@ module.exports.verificar_chamados_filtrados = (app, req, res) => {
   dbConn = dbConnection();
   const filter = req.query.filtro;
   const filter_value = req.query.valor;
-  verificar_chamados_filtrados(dbConn, filter, (error, result) => {
-    console.log(result);
-    res.render('verificar_filtrados.ejs', { tickets: result, filter: filter });
+  verificar_chamados_filtrados(dbConn, filter, filter_value, (error, result) => {
+    if (error) {
+      console.error('Erro ao buscar chamados:', error);
+      return res.status(500).render('notfound.ejs', {
+          errorMessage: 'Erro ao buscar chamados: ' + error.sqlMessage
+      });
+  }
+    else {
+      console.log(result);
+      res.render('verificar_chamados.ejs', { tickets: result, filter: filter });
+    }
   });
   closeConnection(dbConn);
 };

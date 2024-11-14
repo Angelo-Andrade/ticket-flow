@@ -1,5 +1,5 @@
 const dbConnection = require("../../config/dbConnection");
-const { closeConection } = require("../../config/dbConnection");
+const { closeConnection } = require("../../config/dbConnection");
 const { criar_chamados, getCategoriaChamados } = require('../models/criar_chamados');
 
 module.exports.render_criar_chamados = (app, req, res) => {
@@ -8,7 +8,9 @@ module.exports.render_criar_chamados = (app, req, res) => {
     getCategoriaChamados(dbConn, (error, result) => {
         if (error) {
             console.error(error);
-            return res.render('notfound.ejs');
+            return res.render('notfound.ejs', {
+              errorMessage: 'Erro ao carregar a página: ' + error
+            });
         }
         // Passa as categorias para a view
         res.render('criar_chamados.ejs', { categorias: result });

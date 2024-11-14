@@ -1,7 +1,7 @@
 const mysql = require("mysql2");
 
 const host = "sql10.freesqldatabase.com";
-const database = "sql10744601";
+const database = "ssql10744601";
 const user = "sql10744601";
 const password = "BZAtPjn7Gi";
 

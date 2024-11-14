@@ -8,7 +8,7 @@ module.exports = {
                         (descricao, data_criacao, status_chamado, urgencia, id_usuario, id_categoria_chamado) 
                         VALUES (?, ?, 'aberto', ?, 2, ?);`; // Parâmetros para evitar SQL Injection
         console.log(sql);
-        connection.query(sql, [descricao, dataHoraAtual, urgencia, id_categoria_chamado], (error, results) => {
+        dbConnection.query(sql, [descricao, dataHoraAtual, urgencia, id_categoria_chamado], (error, results) => {
                 if (error) {
                     console.error('Erro ao criar chamado:', error);
                     callback(error, null); // Devolver erro para o callback
@@ -23,7 +23,7 @@ module.exports = {
         const sql = `SELECT * FROM categoria_chamado;`;
         console.log(sql);
 
-        connection.query(sql, (error, results) => {
+        dbConnection.query(sql, (error, results) => {
             if (error) {
                 console.error('Erro ao obter categorias:', error);
                 callback(error, null);
