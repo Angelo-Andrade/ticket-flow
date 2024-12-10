@@ -13,7 +13,7 @@ module.exports.verificar_chamados_todos = (app, req, res) => {
       });
   }
     else {
-      console.log(result);
+      console.log('[Controller verificar_chamados] chamados encontrados');
       res.render('verificar_chamados.ejs', { tickets: result, filter: undefined });
 
     }
