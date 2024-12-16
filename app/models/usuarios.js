@@ -1,13 +1,12 @@
 module.exports = {
-    getUser: (dbConn, user, password, callback) => {
+    getUser: (dbConn, user) => {
         return new Promise ((resolve, reject) => {
             const sql = `SELECT * FROM usuario u 
                             JOIN posto_grad p ON p.id_posto_grad = u.id_posto_grad
-                            WHERE u.email = ? AND u.senha = ? LIMIT 1`;
+                            WHERE u.email = ? LIMIT 1`;
     
-            dbConn.query(sql, [user, password], (error, result) => {
+            dbConn.query(sql, [user], (error, result) => {
                 if(error) {
-                    console.error('Erro ao carregar dados:', error);
                     reject(error); // 
                 }
                 resolve(result); 
@@ -20,10 +19,9 @@ module.exports = {
 
         dbConn.query(sql, (error, result) => {
             if (error) {
-                console.error('Erro ao carregar dados:', error);
-                callback(error, null); // Devolver erro para o callback
+                callback(error, null);
             } else {
-                callback(null, result); // Chamar callback com sucesso
+                callback(null, result);
             }
         });
     },
@@ -36,7 +34,6 @@ module.exports = {
 
         dbConn.querry(sql, [nome_completo, nome_guerra, telefone, email, senha, tipo, id_posto_grad], (error, result) => {
             if (error) {
-                console.error('Erro ao fazer inserção:', error);
                 callback(error, null); 
             } else {
                 callback(null, result);
