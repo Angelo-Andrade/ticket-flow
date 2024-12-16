@@ -1,110 +1,74 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chamados em Aberto</title>
-    <link rel="stylesheet" type="text/css" href="../../public/styles/styles.css" />
-    <link rel="stylesheet" href="styles/styles-daltonicos.css" id="daltonic-style" disabled>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script>
-        function adjustFontSize(action) {
-        const root = document.documentElement;
-        const currentFontSize = parseFloat(window.getComputedStyle(root).fontSize);
-        const step = 1; 
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chamados em Aberto</title>
+        <link rel="stylesheet" type="text/css" href="/styles/styles.css" />
+        <link rel="stylesheet" href="/styles/styles-daltonicos.css" id="daltonic-style" disabled>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script>
+            function adjustFontSize(action) {
+                const root = document.documentElement;
+                const currentFontSize = parseFloat(window.getComputedStyle(root).fontSize);
+                const step = 1; 
 
-        if (action === 'increase') {
-            root.style.fontSize = (currentFontSize + step) + 'px';
-        } else if (action === 'decrease') {
-            root.style.fontSize = (currentFontSize - step) + 'px';
-        }
-    }
-        function toggleMenu() {
-            const sidebar = document.querySelector('.sidebar');
-            const body = document.body;
-
-            if (sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
-                body.classList.remove('menu-open');
-            } else {
-                sidebar.classList.add('open');
-                body.classList.add('menu-open');
+                if (action === 'increase') {
+                    root.style.fontSize = (currentFontSize + step) + 'px';
+                } else if (action === 'decrease') {
+                    root.style.fontSize = (currentFontSize - step) + 'px';
+                }
             }
-        }
+            
+            function toggleDaltonicMode() {
+                const daltonicStyle = document.getElementById('daltonic-style');
+                const defaultStyle = document.getElementById('default-style');
 
-        function confirmarCancelamento(chamadoId, elemento) {
-            if (confirm('Tem certeza de que deseja cancelar este chamado?')) {
-                elemento.parentElement.remove();
-                
-                // Redireciona para a página de histórico de chamados após um curto atraso
-                setTimeout(function() {
-                    window.location.href = 'historico.html';
-                }, 100); // 100 milissegundos de atraso para garantir a remoção do elemento
+                if (daltonicStyle.disabled) {
+                    daltonicStyle.disabled = false;
+                    defaultStyle.disabled = true;
+                } else {
+                    daltonicStyle.disabled = true;
+                    defaultStyle.disabled = false;
+                }
             }
-        }
+        </script>
+    </head>
 
-        function toggleDaltonicMode() {
-            const daltonicStyle = document.getElementById('daltonic-style');
-            const defaultStyle = document.getElementById('default-style');
+    <body>
+        <header class="header">
+            <div class="header-icons">
+                <i class="fas fa-bell" aria-label="Notificações"></i><span class="notification-count"></span>
+                <i class="fas fa-question-circle" aria-label="Ajuda"></i>
+            </div>
+            <div class="font-size-controls">
+                <button onclick="adjustFontSize('increase')" aria-label="Aumentar tamanho da fonte">A+</button>
+                <button onclick="adjustFontSize('decrease')" aria-label="Diminuir tamanho da fonte">A-</button>
+            </div>
+            <button class="color-blind-mode" onclick="toggleDaltonicMode()" aria-label="Ativar modo daltônico">Modo Daltônico</button>
+        </header>
 
-            if (daltonicStyle.disabled) {
-                daltonicStyle.disabled = false;
-                defaultStyle.disabled = true;
-            } else {
-                daltonicStyle.disabled = true;
-                defaultStyle.disabled = false;
-            }
-        }
-
-        function atualizarStatus(chamadoId, selectElement) {
-            const chamadoItem = document.getElementById(chamadoId);
-            const statusElement = chamadoItem.querySelector('.status');
-            statusElement.textContent = selectElement.value;
-
-            if (selectElement.value === "Fechado") {
-                // Remove o chamado da lista
-                chamadoItem.remove();
-            }
-        }
-    </script>
-</head>
-<body>
-
-    <header class="header">
-        <div class="header-icons">
-            <i class="fas fa-bell"></i><span class="notification-count"></span>
-            <i class="fas fa-question-circle"></i>
-        </div>
-        <div class="font-size-controls">
-            <button onclick="adjustFontSize('increase')">A+</button>
-            <button onclick="adjustFontSize('decrease')">A-</button>
-        </div>
-        <button class="color-blind-mode" onclick="toggleDaltonicMode()">Modo Daltônico</button>
-    </header>
-    
-    <div class="container">
-        <h1 class="title">TicketFlow</h1>
-        <div class="div-users">
-            <div class="user-form">
-                <form action="/usuario/autenticar" method="POST">
-                    <h3>Insira seus dados:</h3>
-                    <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="password" placeholder="Senha" required>
-                    <br>
-
-                    <% if (error) { %>
-                        <div>
-                            <h4>Erro</h4>
-                            <p>Email ou senha incorretos.</p>
-                        </div>
-                    <% } %>
-                    <button type="submit">Conectar</button>
-                </form>
+        <div class="container">
+            <h1>TicketFlow</h1>
+            <div class="div-users">
+                <div class="user-form">
+                    <form action="/usuario/autenticar" method="POST">
+                        <h3>Insira seus dados para conectar-se e acessar o sistema:</h3>
+                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="password" name="password" placeholder="Senha" required>
+                        <br>
+            
+                        <% if (error) { %>
+                            <div>
+                                <h4>Erro</h4>
+                                <p>Email ou senha incorretos.</p>
+                            </div>
+                        <% } %>
+                        <button type="submit">Conectar</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</body>
-
-
+    </body>
 </html>
