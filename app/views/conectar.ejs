@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chamados em Aberto</title>
-    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+    <link rel="stylesheet" type="text/css" href="../../public/styles/styles.css" />
     <link rel="stylesheet" href="styles/styles-daltonicos.css" id="daltonic-style" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -72,17 +72,9 @@
 <body>
 
     <header class="header">
-        <div class="menu-toggle" onclick="toggleMenu()">
-            <span>&#9776;</span>
-        </div>
-        <div class="user-info">
-            <i class="fas fa-user"></i> <span id="user-name">Sgt Monteiro</span>
-        </div>
         <div class="header-icons">
             <i class="fas fa-bell"></i><span class="notification-count"></span>
             <i class="fas fa-question-circle"></i>
-            <i class="fas fa-cogs"></i>
-            <i class="fas fa-search"></i>
         </div>
         <div class="font-size-controls">
             <button onclick="adjustFontSize('increase')">A+</button>
@@ -90,43 +82,24 @@
         </div>
         <button class="color-blind-mode" onclick="toggleDaltonicMode()">Modo Daltônico</button>
     </header>
-
-    <nav class="sidebar">
-        <ul>
-            <img src="https://logodownload.org/wp-content/uploads/2018/02/exercito-brasileiro-logo-2.png" alt="Logo do Exército Brasileiro" style="width: 50px; display: block; margin: 0 auto 20px;"></a>
-            <li><a href="/"><i class="fas fa-history icon"></i> <span>Histórico de Chamados</span></a></li>
-            <li><a href="/criar_chamados"><i class="fas fa-plus icon"></i> <span>Abrir Chamado</span></a></li>
-            <li><a href="/filtrar?filtro=c.status_chamado&valor=aberto"><i class="fas fa-folder-open icon"></i> <span>Chamados em Aberto</span></a></li>
-            <li><a href="usuarios-cadastrados.html"><i class="fas fa-users icon"></i> <span>Usuários Cadastrados</span></a></li>
-            <li><a href="cadastrar-usuario.html"><i class="fas fa-user-plus icon"></i> <span>Cadastrar Novo Usuário</span></a></li>
-            <li><a href="/usuario/desconectar"><i class="fas fa-sign-out-alt icon"></i> <span>Logout</span></a></li>
-        </ul>
-    </nav>
     
     <div class="container">
         <h1 class="title">TicketFlow</h1>
-        <div class="div-tickets">
-            <div class="chamado-form">
-                <form action="/criar_chamado" method="POST">
-                    <label for="descricao">Descrição:</label><br>
-                    <textarea id="descricao" name="descricao" rows="3" cols="50" required></textarea><br><br>
+        <div class="div-users">
+            <div class="user-form">
+                <form action="/usuario/autenticar" method="POST">
+                    <h3>Insira seus dados:</h3>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Senha" required>
+                    <br>
 
-                    <label for="urgencia">Urgência:</label><br>
-                    <select id="urgencia" name="urgencia" required>
-                        <option value="baixa">Baixa</option>
-                        <option value="media">Média</option>
-                        <option value="alta">Alta</option>
-                    </select><br><br>
-
-                    <label for="categoria">Categoria:</label><br>
-                    <select id="categoria" name="id_categoria_chamado" required>
-                        <!-- Gera as opções a partir das categorias que vieram do banco -->
-                        <% categorias.forEach(function(categoria) { %>
-                            <option value="<%= categoria.id_categoria_chamado %>"><%= categoria.descricao %></option>
-                        <% }); %>
-                    </select><br><br>
-
-                    <button type="submit">Enviar</button>
+                    <% if (error) { %>
+                        <div>
+                            <h4>Erro</h4>
+                            <p>Email ou senha incorretos.</p>
+                        </div>
+                    <% } %>
+                    <button type="submit">Conectar</button>
                 </form>
             </div>
         </div>

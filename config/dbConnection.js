@@ -24,7 +24,7 @@ module.exports.closeConnection = (connection) => {
     if (err) {
       console.error('Erro ao fechar a conexão:', err);
     } else {
-      console.log('Conexão encerrada com sucesso!');
+      console.log('[dbConnection] Conexão encerrada');
     }
   });
 };

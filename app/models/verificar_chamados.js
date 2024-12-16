@@ -49,6 +49,7 @@ module.exports = {
                 ORDER BY 
                   c.status_chamado ASC,
                   c.data_criacao ASC;`;
+                  
     dbConnection.query(sql, callback);
   }
 }

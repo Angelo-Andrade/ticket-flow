@@ -6,14 +6,14 @@ module.exports = {
         // Criar a consulta SQL
         const sql = `INSERT INTO chamado 
                         (descricao, data_criacao, status_chamado, urgencia, id_usuario, id_categoria_chamado) 
-                        VALUES (?, ?, 'aberto', ?, 2, ?);`; // Parâmetros para evitar SQL Injection
+                        VALUES (?, ?, 'aberto', ?, 2, ?);`; 
         console.log(sql);
         dbConnection.query(sql, [descricao, dataHoraAtual, urgencia, id_categoria_chamado], (error, results) => {
                 if (error) {
                     console.error('Erro ao criar chamado:', error);
-                    callback(error, null); // Devolver erro para o callback
+                    callback(error, null); 
                 } else {
-                    callback(null, results); // Chamar callback com sucesso
+                    callback(null, results); 
                 }
             }
         );
