@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TicketFlow - Listar Usuários</title>
-    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
-    <link rel="stylesheet" href="styles/styles-daltonicos.css" id="daltonic-style" disabled>
+    <link rel="stylesheet" type="text/css" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/styles/styles-daltonicos.css" id="daltonic-style" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -46,29 +46,18 @@
     <div class="container">
         <h1 class="title">Listar Usuários</h1>
         <div class="div-usuarios">
-            <div class="usuario-dados">
-                <h2>Informações do Usuário</h2>
-        
-                <p><strong>Nome Completo:</strong> <%= dados && dados.nome_completo ? dados.nome_completo : 'Não informado' %></p>
-                <p><strong>Nome de Guerra:</strong> <%= dados && dados.nome_guerra ? dados.nome_guerra : 'Não informado' %></p>
-                <p><strong>Telefone:</strong> <%= dados && dados.telefone ? dados.telefone : 'Não informado' %></p>
-                <p><strong>E-mail:</strong> <%= dados && dados.email ? dados.email : 'Não informado' %></p>
-                <p><strong>Tipo de Usuário:</strong> <%= dados && dados.tipo ? (dados.tipo === 'admin' ? 'Administrador' : 'Comum') : 'Não informado' %></p>
-                <p><strong>Posto/Graduação:</strong> 
-                    <% if (posto_grads && dados && dados.id_posto_grad) { %>
-                        <%= posto_grads.find(posto => posto.id_posto_grad === dados.id_posto_grad).descricao %>
-                    <% } else { %>
-                        Não informado
-                    <% } %>
-                </p>
-        
-                <% if (error) { %>
-                    <div class="error">
-                        <h3>Houve um erro:</h3>
-                        <p style="color:red"><%= error.message %></p>
-                    </div>
-                <% } %>
-            </div>
+            <% usuarios.forEach((usuario) => { %>
+                <div class="dados-usuario">
+                    <h2>Informações do Usuário</h2>
+                    <p><strong>Nome Completo:</strong> <%= usuario && usuario.nome_completo ? usuario.nome_completo : 'Não informado' %></p>
+                    <p><strong>Nome de Guerra:</strong> <%= usuario && usuario.nome_guerra ? usuario.nome_guerra : 'Não informado' %></p>
+                    <p><strong>Telefone:</strong> <%= usuario && usuario.telefone ? usuario.telefone : 'Não informado' %></p>
+                    <p><strong>E-mail:</strong> <%= usuario && usuario.email ? usuario.email : 'Não informado' %></p>
+                    <p><strong>Tipo de Usuário:</strong> <%= usuario && usuario.tipo ? (usuario.tipo === 'admin' ? 'Administrador' : 'Comum') : 'Não informado' %></p>
+                    <p><strong>Posto/Graduação:</strong> <%= usuario && usuario.descricao ? usuario.descricao : 'Não informado' %></p>
+                    <br>
+                </div>
+            <% }); %>                
         </div>
         
     </div>

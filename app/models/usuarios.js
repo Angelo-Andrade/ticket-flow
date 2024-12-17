@@ -17,7 +17,9 @@ module.exports = {
     },
 
     getUsers: (dbConn, callback) => {
-        const sql = `SELECT * FROM usuarios ORDER BY ASC;`;
+        const sql = `SELECT * FROM usuario u 
+                            JOIN posto_grad p ON p.id_posto_grad = u.id_posto_grad
+                            ORDER BY nome_completo ASC;`;
 
         dbConn.query(sql, (error, result) => {
             if (error) {

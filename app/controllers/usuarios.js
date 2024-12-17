@@ -167,7 +167,7 @@ module.exports.listar_usuarios = async (app, req, res) => {
                 console.error('Erro na consulta:', error);
                 res.redirect('/');
             }
-            res.render('listar_usuarios.ejs', { dados: result });
+            res.render('listar_usuarios.ejs', { usuarios: result });
         });
     } catch (error) {
         console.log('[Controller usuarios] erro cadastrar usuario', error);
