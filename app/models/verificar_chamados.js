@@ -25,7 +25,7 @@ module.exports = {
     dbConnection.query(sql, callback);
   },
 
-  verificar_chamados_filtrados: (dbConnection, filter, filter_value, callback) => {
+  verificar_chamados_filtrados: (dbConnection, filter, callback) => {
     console.log("[Model verificar_chamados]");
     const sql = `SELECT 
                     c.id_chamado, 
@@ -44,11 +44,11 @@ module.exports = {
                     usuario u ON u.id_usuario = c.id_usuario
                 JOIN 
                     posto_grad p ON p.id_posto_grad = u.id_posto_grad
-                WHERE
-                  ${filter} LIKE '%${filter_value}%'
+                ${filter}
                 ORDER BY 
                   c.status_chamado ASC,
                   c.data_criacao ASC;`;
+
                   
     dbConnection.query(sql, callback);
   }

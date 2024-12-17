@@ -7,19 +7,35 @@ module.exports.verificar_chamados_todos = (app, req, res) => {
   console.log('[Controller verificar_chamados]');
   try {
     dbConn = dbConnection();
-    verificar_chamados_todos(dbConn, (error, result) => {
-      if (error) {
-        console.error('Erro ao buscar chamados:', error);
-        return res.status(500).render('notfound.ejs', {
-            errorMessage: 'Erro ao buscar chamados: ' + error.sqlMessage
-        });
-    }
-      else {
-        console.log('[Controller verificar_chamados] chamados encontrados');
-        res.render('verificar_chamados.ejs', { tickets: result, filter: undefined });
-  
+    if (req.session.user.user_type === 'admin'){
+      verificar_chamados_todos(dbConn, '', (error, result) => {
+        if (error) {
+          console.error('Erro ao buscar chamados:', error);
+          return res.status(500).render('notfound.ejs', {
+              errorMessage: 'Erro ao buscar chamados: ' + error.sqlMessage
+          });
       }
-    });
+        else {
+          console.log('[Controller verificar_chamados] chamados encontrados');
+          res.render('verificar_chamados.ejs', { tickets: result, filter: undefined });
+    
+        }
+      });
+    } else {
+      filtro = `WHERE u.id_usuario = ${req.session.user.id} `;
+      verificar_chamados_filtrados(dbConn, filtro, (error, result) => {
+        if (error) {
+          console.error('Erro ao buscar chamados:', error);
+          return res.status(500).render('notfound.ejs', {
+              errorMessage: 'Erro ao buscar chamados: ' + error.sqlMessage
+          });
+        }
+        else {
+          console.log(result);
+          res.render('verificar_chamados.ejs', { tickets: result, filter: undefined });
+        }
+      });
+    }
   } catch (error) {
     console.log('[Controller verficar_chamados] erro com a querry' + error);
     return res.status(500).render('notfound.ejs', {
@@ -37,18 +53,35 @@ module.exports.verificar_chamados_filtrados = (app, req, res) => {
     dbConn = dbConnection();
     const filter = req.query.filtro;
     const filter_value = req.query.valor;
-    verificar_chamados_filtrados(dbConn, filter, filter_value, (error, result) => {
-      if (error) {
-        console.error('Erro ao buscar chamados:', error);
-        return res.status(500).render('notfound.ejs', {
-            errorMessage: 'Erro ao buscar chamados: ' + error.sqlMessage
-        });
-      }
-      else {
-        console.log(result);
-        res.render('verificar_chamados.ejs', { tickets: result, filter: filter });
-      }
-    });
+    if (req.session.user.user_type === 'admin'){
+      const filterquery = `WHERE ${filter} = ${filter_value}`
+      verificar_chamados_filtrados(dbConn, filterquery, (error, result) => {
+        if (error) {
+          console.error('Erro ao buscar chamados:', error);
+          return res.status(500).render('notfound.ejs', {
+              errorMessage: 'Erro ao buscar chamados: ' + error.sqlMessage
+          });
+        }
+        else {
+          console.log(result);
+          res.render('verificar_chamados.ejs', { tickets: result, filter: filter });
+        }
+      });
+    } else {
+      const filterquery = `WHERE ${filter} = '${filter_value}' AND u.id_usuario = ${req.session.user.id} `;
+      verificar_chamados_filtrados(dbConn, filterquery, (error, result) => {
+        if (error) {
+          console.error('Erro ao buscar chamados:', error);
+          return res.status(500).render('notfound.ejs', {
+              errorMessage: 'Erro ao buscar chamados: ' + error.sqlMessage
+          });
+        }
+        else {
+          console.log(result);
+          res.render('verificar_chamados.ejs', { tickets: result, filter: filter });
+        }
+      });
+    }
   } catch (error) {
     console.log('[Controller verficar_chamados] erro com a querry' + error);
     return res.status(500).render('notfound.ejs', {
