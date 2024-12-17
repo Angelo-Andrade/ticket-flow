@@ -1,6 +1,5 @@
 const Joi = require('joi');
-const { verificar_chamados_todos, verificar_chamados_filtrados } = require('../controllers/verificar_chamados');
-const { criar_chamados, render_criar_chamados } = require('../controllers/criar_chamados');
+const { verificar_chamados_todos, verificar_chamados_filtrados, criar_chamado, render_criar_chamados  } = require('../controllers/chamados');
 const { render_conectar, autenticar, desconectar, render_criar_usuarios, cadastrarUsuario, render_erro_criar_usuarios, listar_usuarios } = require('../controllers/usuarios');
 
 
@@ -117,16 +116,16 @@ module.exports = {
     });
   },
   
-  criar_chamados: (app) => {
-    app.post('/criar_chamado', validarDadosChamado, function (req, res) {
-      if(req.session.user && (req.session.user.user_type === 'admin')) return criar_chamados(app, req, res);
+  criar_chamado: (app) => {
+    app.post('/criar_chamado', function (req, res) {
+      if(req.session.user) return criar_chamado(app, req, res);
       res.redirect('/usuario/conectar');
     });
   },
   
   render_criar_chamados: (app) => {
     app.get('/criar_chamados', function (req, res) {
-      if(req.session.user && (req.session.user.user_type === 'admin')) return render_criar_chamados(app, req, res);
+      if(req.session.user) return render_criar_chamados(app, req, res);
        res.redirect('/usuario/conectar');
     });
   },
@@ -157,7 +156,7 @@ module.exports = {
     });
   },
 
-  cadastrar_usuarior: (app) => {
+  cadastrar_usuarios: (app) => {
     app.post('/usuario/cadastrar', function (req, res) {
       const invalidInput = validarDadosUsuario(req, res);
       if(invalidInput) return render_erro_criar_usuarios(app, req, res, invalidInput);
