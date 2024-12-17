@@ -1,3 +1,5 @@
+const { reject } = require("bcrypt/promises");
+
 module.exports = {
     getUser: (dbConn, user) => {
         return new Promise ((resolve, reject) => {
@@ -7,7 +9,7 @@ module.exports = {
     
             dbConn.query(sql, [user], (error, result) => {
                 if(error) {
-                    reject(error); // 
+                    return reject(error); // 
                 }
                 resolve(result); 
             });
@@ -19,27 +21,38 @@ module.exports = {
 
         dbConn.query(sql, (error, result) => {
             if (error) {
-                callback(error, null);
-            } else {
-                callback(null, result);
-            }
+                return callback(error, null);
+            } 
+            callback(null, result);
         });
     },
 
     insertNewUser: (dbConn, nome_completo, nome_guerra, telefone, email, senha, tipo, id_posto_grad, callback) => {
-        const sql = `INSERT INTO usuarios 
+        const sql = `INSERT INTO usuario 
         (nome_completo, nome_guerra, telefone, email, senha, tipo, id_posto_grad) 
         VALUES 
         (?, ?, ?, ?, ?, ?, ?);`
 
-        dbConn.querry(sql, [nome_completo, nome_guerra, telefone, email, senha, tipo, id_posto_grad], (error, result) => {
+        dbConn.query(sql, [nome_completo, nome_guerra, telefone, email, senha, tipo, id_posto_grad], (error, result) => {
             if (error) {
-                callback(error, null); 
-            } else {
-                callback(null, result);
-            }
+                return callback(error, null); 
+            } 
+            callback(null, result);
         });
-    }
+    },
+
+    getPostoGrad: (dbConn) => {
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT * FROM posto_grad;`;
+    
+            dbConn.query(sql, (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        });
+    }    
 }
 
 

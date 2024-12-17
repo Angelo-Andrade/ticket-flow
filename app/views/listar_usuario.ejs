@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chamados em Aberto</title>
-    <link rel="stylesheet" type="text/css" href="/styles/styles.css" />
-    <link rel="stylesheet" href="/styles/styles-daltonicos.css" id="daltonic-style" disabled>
+    <title>TicketFlow - Listar Usuários</title>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+    <link rel="stylesheet" href="styles/styles-daltonicos.css" id="daltonic-style" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
 </head>
-
 <body>
+
     <header class="header">
         <div class="menu-toggle" onclick="toggleMenu()">
             <span>&#9776;</span>
@@ -38,21 +37,44 @@
             <li><a href="/"><i class="fas fa-history icon"></i> <span>Histórico de Chamados</span></a></li>
             <li><a href="/criar_chamados"><i class="fas fa-plus icon"></i> <span>Abrir Chamado</span></a></li>
             <li><a href="/filtrar?filtro=c.status_chamado&valor=aberto"><i class="fas fa-folder-open icon"></i> <span>Chamados em Aberto</span></a></li>
-            <li><a href="usuarios-cadastrados.html"><i class="fas fa-users icon"></i> <span>Usuários Cadastrados</span></a></li>
-            <li><a href="cadastrar-usuario.html"><i class="fas fa-user-plus icon"></i> <span>Cadastrar Novo Usuário</span></a></li>
+            <li><a href="/usuario/listar"><i class="fas fa-users icon"></i> <span>Usuários Cadastrados</span></a></li>
+            <li><a href="/usuario/criar"><i class="fas fa-user-plus icon"></i> <span>Cadastrar Novo Usuário</span></a></li>
             <li><a href="/usuario/desconectar"><i class="fas fa-sign-out-alt icon"></i> <span>Logout</span></a></li>
         </ul>
     </nav>
-
+    
     <div class="container">
-        <h1 class="title">Erro</h1>
-        <div class="alert alert-danger" role="alert">
-            <%= errorMessage %> 
+        <h1 class="title">Listar Usuários</h1>
+        <div class="div-usuarios">
+            <div class="usuario-dados">
+                <h2>Informações do Usuário</h2>
+        
+                <p><strong>Nome Completo:</strong> <%= dados && dados.nome_completo ? dados.nome_completo : 'Não informado' %></p>
+                <p><strong>Nome de Guerra:</strong> <%= dados && dados.nome_guerra ? dados.nome_guerra : 'Não informado' %></p>
+                <p><strong>Telefone:</strong> <%= dados && dados.telefone ? dados.telefone : 'Não informado' %></p>
+                <p><strong>E-mail:</strong> <%= dados && dados.email ? dados.email : 'Não informado' %></p>
+                <p><strong>Tipo de Usuário:</strong> <%= dados && dados.tipo ? (dados.tipo === 'admin' ? 'Administrador' : 'Comum') : 'Não informado' %></p>
+                <p><strong>Posto/Graduação:</strong> 
+                    <% if (posto_grads && dados && dados.id_posto_grad) { %>
+                        <%= posto_grads.find(posto => posto.id_posto_grad === dados.id_posto_grad).descricao %>
+                    <% } else { %>
+                        Não informado
+                    <% } %>
+                </p>
+        
+                <% if (error) { %>
+                    <div class="error">
+                        <h3>Houve um erro:</h3>
+                        <p style="color:red"><%= error.message %></p>
+                    </div>
+                <% } %>
+            </div>
         </div>
+        
     </div>
-
 
     <script src="/js/scripts.js"></script>
 </body>
+
 
 </html>

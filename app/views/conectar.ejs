@@ -8,32 +8,6 @@
         <link rel="stylesheet" href="/styles/styles-daltonicos.css" id="daltonic-style" disabled>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <script>
-            function adjustFontSize(action) {
-                const root = document.documentElement;
-                const currentFontSize = parseFloat(window.getComputedStyle(root).fontSize);
-                const step = 1; 
-
-                if (action === 'increase') {
-                    root.style.fontSize = (currentFontSize + step) + 'px';
-                } else if (action === 'decrease') {
-                    root.style.fontSize = (currentFontSize - step) + 'px';
-                }
-            }
-            
-            function toggleDaltonicMode() {
-                const daltonicStyle = document.getElementById('daltonic-style');
-                const defaultStyle = document.getElementById('default-style');
-
-                if (daltonicStyle.disabled) {
-                    daltonicStyle.disabled = false;
-                    defaultStyle.disabled = true;
-                } else {
-                    daltonicStyle.disabled = true;
-                    defaultStyle.disabled = false;
-                }
-            }
-        </script>
     </head>
 
     <body>
@@ -70,5 +44,6 @@
                 </div>
             </div>
         </div>
+        <script src="/js/scripts.js"></script>
     </body>
 </html>

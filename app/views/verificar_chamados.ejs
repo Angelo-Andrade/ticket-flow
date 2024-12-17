@@ -8,78 +8,6 @@
     <link rel="stylesheet" href="styles/styles-daltonicos.css" id="daltonic-style" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script>
-        function adjustFontSize(action) {
-        const root = document.documentElement;
-        const currentFontSize = parseFloat(window.getComputedStyle(root).fontSize);
-        const step = 1; 
-
-        if (action === 'increase') {
-            root.style.fontSize = (currentFontSize + step) + 'px';
-        } else if (action === 'decrease') {
-            root.style.fontSize = (currentFontSize - step) + 'px';
-        }
-    }
-        function toggleMenu() {
-            const sidebar = document.querySelector('.sidebar');
-            const body = document.body;
-
-            if (sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
-                body.classList.remove('menu-open');
-            } else {
-                sidebar.classList.add('open');
-                body.classList.add('menu-open');
-            }
-        }
-
-        function confirmarCancelamento(chamadoId, elemento) {
-            if (confirm('Tem certeza de que deseja cancelar este chamado?')) {
-                elemento.parentElement.remove();
-                
-                // Redireciona para a página de histórico de chamados após um curto atraso
-                setTimeout(function() {
-                    window.location.href = 'historico.html';
-                }, 100); // 100 milissegundos de atraso para garantir a remoção do elemento
-            }
-        }
-
-        function toggleDaltonicMode() {
-            const daltonicStyle = document.getElementById('daltonic-style');
-            const defaultStyle = document.getElementById('default-style');
-
-            if (daltonicStyle.disabled) {
-                daltonicStyle.disabled = false;
-                defaultStyle.disabled = true;
-            } else {
-                daltonicStyle.disabled = true;
-                defaultStyle.disabled = false;
-            }
-        }
-
-        function atualizarStatus(chamadoId, selectElement) {
-            const chamadoItem = document.getElementById(chamadoId);
-            const statusElement = chamadoItem.querySelector('.status');
-            statusElement.textContent = selectElement.value;
-
-            if (selectElement.value === "Fechado") {
-                // Remove o chamado da lista
-                chamadoItem.remove();
-            }
-        }
-
-        function alterarTipoInput() {
-            const filtroSelect = document.getElementById("filtro");
-            const inputValor = document.getElementById("valor");
-
-            if (filtroSelect.value === "c.data_criacao") {
-                inputValor.type = "date";
-            } else {
-                inputValor.type = "text";
-            }
-        }
-        window.onload = alterarTipoInput;
-    </script>
 </head>
 <body>
 
@@ -109,8 +37,8 @@
             <li><a href="/"><i class="fas fa-history icon"></i> <span>Histórico de Chamados</span></a></li>
             <li><a href="/criar_chamados"><i class="fas fa-plus icon"></i> <span>Abrir Chamado</span></a></li>
             <li><a href="/filtrar?filtro=c.status_chamado&valor=aberto"><i class="fas fa-folder-open icon"></i> <span>Chamados em Aberto</span></a></li>
-            <li><a href="usuarios-cadastrados.html"><i class="fas fa-users icon"></i> <span>Usuários Cadastrados</span></a></li>
-            <li><a href="cadastrar-usuario.html"><i class="fas fa-user-plus icon"></i> <span>Cadastrar Novo Usuário</span></a></li>
+            <li><a href="/usuario/listar"><i class="fas fa-users icon"></i> <span>Usuários Cadastrados</span></a></li>
+            <li><a href="/usuario/criar"><i class="fas fa-user-plus icon"></i> <span>Cadastrar Novo Usuário</span></a></li>
             <li><a href="/usuario/desconectar"><i class="fas fa-sign-out-alt icon"></i> <span>Logout</span></a></li>
         </ul>
     </nav>
@@ -174,6 +102,8 @@
           <a href="historico.html" class="btn-extrair">Extrair Histórico de Chamados</a>
         -->
     </div>
+
+    <script src="/js/scripts.js"></script>
 </body>
 
 </html>

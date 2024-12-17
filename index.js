@@ -9,5 +9,8 @@ routes.criar_chamados(app);
 routes.render_conectar(app);
 routes.autenticar_usuario(app);
 routes.desconectar_usuario(app);
+routes.render_criar_usuarios(app);
+routes.cadastrar_usuarior(app);
+routes.listar_usuarios(app);
 routes.render_not_found(app);
 
