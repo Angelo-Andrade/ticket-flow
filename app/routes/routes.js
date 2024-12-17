@@ -165,7 +165,8 @@ module.exports = {
   },
 
   listar_usuarios: (app) => {
-    app.get('usuario/listar', function(req, res){
+    app.get('/usuario/listar', function(req, res){
+      console.log('sim');
       listar_usuarios(app, req, res);
     });
   },

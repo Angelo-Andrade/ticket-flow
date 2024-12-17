@@ -157,8 +157,7 @@ module.exports.cadastrarUsuario = async (app, req, res) => {
 }
 
 module.exports.listar_usuarios = async (app, req, res) => {
-    console.log('[Controller usuarios] cadastrar usuario');
-    const { nome_completo, nome_guerra, telefone, email, senha, tipo, id_posto_grad } = req.body;
+    console.log('[Controller usuarios] listar usuarios');
 
     try {
         dbConn = dbConnection();
