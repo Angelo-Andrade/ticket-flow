@@ -137,14 +137,14 @@ module.exports.cadastrarUsuario = async (app, req, res) => {
         const hash = await bcryptGenerateHash(senha);
 
         dbConn = dbConnection();
+        const postoGrads = await getPostoGrad(dbConn);
         await insertNewUser(dbConn, nome_completo, nome_guerra, telefone, email, hash, tipo, id_posto_grad, async (error, result) =>{
             if (error) {
                 console.error('Erro na consulta:', error);
-                const postoGrads = await getPostoGrad(dbConn);
-                res.render('criar_usuario.ejs', { dados: req.body, posto_grads: postoGrads, error: error});
+                return res.render('criar_usuario.ejs', { dados: req.body, posto_grads: postoGrads, error: error});
             }
+            res.redirect('/usuario/listar');
         });
-        redirect('/usuarios/listar');
     } catch (error) {
         console.log('[Controller usuarios] erro cadastrar usuario', error);
         return res.status(500).render('notfound.ejs', {
