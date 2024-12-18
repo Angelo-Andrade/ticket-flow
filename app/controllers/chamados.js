@@ -1,6 +1,8 @@
 const  dbConnection = require("../../config/dbConnection");
 const { verificar_chamados_todos, verificar_chamados_filtrados } = require("../models/verificar_chamados");
 const { criar_chamados, getCategoriaChamados } = require('../models/criar_chamados');
+const { excluir_chamado } = require('../models/excluir_chamados');
+
 
 
 module.exports.verificar_chamados_todos = (app, req, res) => {
@@ -149,3 +151,32 @@ module.exports.criar_chamado = (app, req, res) => {
       if(dbConn) dbConnection.closeConnection(dbConn);
     }
   };
+
+  module.exports.excluir_chamado = (app, req, res) => {
+    console.log('[Controller Excluir Chamados]');
+    try {
+      const id_chamado = req.body.id;
+      
+      console.log('Id Chamado', id_chamado);
+    
+      dbConn = dbConnection();
+      excluir_chamado(dbConn, id_chamado, (error, result) => {
+        if (error) {
+          console.error('Erro ao excluir chamado:', error);
+          return res.status(500).render('notfound.ejs', {
+              errorMessage: 'Erro ao excluir chamado: ' + error.sqlMessage
+          });
+      }
+        res.redirect('/');
+      });
+    } catch (error) {
+      console.log('[Controller excluir_chamados] erro com a querry' + error);
+      return res.status(500).render('notfound.ejs', {
+        errorMessage: 'Erro ao excluir chamados: ' + error.sqlMessage
+      });
+    }
+    finally {
+      if(dbConn) dbConnection.closeConnection(dbConn);
+    }
+  };
+

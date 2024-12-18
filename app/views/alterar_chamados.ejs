@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Chamado</title>
+</head>
+<body>
+    <h1>Alterar Chamado</h1>
+    <form action="/chamado/alterar/salvar" method="POST">
+        <input type="hidden" name="id" value="<%= chamado.id_chamado %>">
+        
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricao" name="descricao" required><%= chamado.descricao %></textarea>
+        
+        <label for="urgencia">Urgência:</label>
+        <select id="urgencia" name="urgencia" required>
+            <option value="baixa" <%= chamado.urgencia === 'baixa' ? 'selected' : '' %>>Baixa</option>
+            <option value="media" <%= chamado.urgencia === 'media' ? 'selected' : '' %>>Média</option>
+            <option value="alta" <%= chamado.urgencia === 'alta' ? 'selected' : '' %>>Alta</option>
+        </select>
+        
+        <button type="submit">Salvar Alterações</button>
+    </form>
+</body>
+</html>

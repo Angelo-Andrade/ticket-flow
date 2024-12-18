@@ -71,12 +71,25 @@
                             <div class="container">
                                 <div class="div-tickets">
                                     <div class="div-ticket">
-                                        <p><strong>Solicitante:</strong> <%= ticket.descricao_posto_grad %> <%= ticket.nome_guerra %></p>
-                                        <p><strong>Categoria:</strong> <%= ticket.descricao_categoria %></p>
-                                        <p><strong>Descrição:</strong> <%= ticket.descricao_chamado %></p>
-                                        <p><strong>Urgência:</strong> <%= ticket.urgencia %></p>
-                                        <p><strong>Data e Hora:</strong> <%= ticket.data_criacao %></p>
-                                        <p><strong>Status:</strong> <span class="status"><%= ticket.status_chamado %></span></p>
+                                        <form action="/chamado/alterar/" method="POST">
+                                            <button type="submit" name="id" value="<%= ticket.id_chamado %>" class="btn btn-primary">Alterar</button>
+                                            <p><strong>Solicitante:</strong> <%= ticket.descricao_posto_grad %> <%= ticket.nome_guerra %></p>
+                                            <p><strong>Categoria:</strong> <%= ticket.descricao_categoria %></p>
+                                            <p><strong>Descrição:</strong> <%= ticket.descricao_chamado %></p>
+                                            <p><strong>Urgência:</strong> <%= ticket.urgencia %></p>
+                                            <p><strong>Data e Hora:</strong> <%= ticket.data_criacao %></p>
+                                            <p><strong>Status:</strong> <span class="status"><%= ticket.status_chamado %></span></p>
+                                        </form>
+
+
+                                        <div class="ticket-actions">
+                                            
+                                            <form action="/chamado/excluir/" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir?');" style="display:inline;">
+                                                <button type="submit" name="id" value="<%= ticket.id_chamado %>" class="btn btn-danger">Excluir</button>
+                                            </form>
+                                        </div>
+
+
                                         <!-- PARA SER IMPLEMENTADO FUTURAMENTE   
                                         <select>
                                             <option value="Aberto">Aberto</option>
