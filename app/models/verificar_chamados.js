@@ -49,7 +49,7 @@ module.exports = {
                     usuario u ON u.id_usuario = c.id_usuario
                 JOIN 
                     posto_grad p ON p.id_posto_grad = u.id_posto_grad
-                ${filter}
+                ${filter} AND status_chamado <> 'cancelado'
                 ORDER BY 
                   c.status_chamado ASC,
                   c.data_criacao ASC;`;
