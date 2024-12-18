@@ -178,3 +178,27 @@ module.exports.listar_usuarios = async (app, req, res) => {
     }
 
 }
+
+module.exports.alterar_usuario = async (app, req, res) => {
+    console.log('[Controller usuarios] alterar usuario');
+
+    
+    try {
+        dbConn = dbConnection();
+        await getUsers(dbConn, (error, result) =>{
+            if (error) {
+                console.error('Erro na consulta:', error);
+                res.redirect('/');
+            }
+            res.render('listar_usuarios.ejs', { usuarios: result });
+        });
+    } catch (error) {
+        console.log('[Controller usuarios] erro cadastrar usuario', error);
+        return res.status(500).render('notfound.ejs', {
+            errorMessage: 'Erro ao buscar dados: ' + error.sqlMessage
+        });
+    } finally {
+        if(dbConn) dbConnection.closeConnection(dbConn);
+    }
+
+}

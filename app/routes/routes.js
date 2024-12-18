@@ -94,7 +94,7 @@ const validarDadosChamado = (req, res, next) => {
   next();
 };
 
-const validarDadosUsuario = (req, res, next) => {
+const validarDadosUsuario = (req, res) => {
   const { error } = schemaUsuario.validate(req.body);
   console.log(error);
   return error;
@@ -103,7 +103,7 @@ const validarDadosUsuario = (req, res, next) => {
 module.exports = {
   verificar_chamados_todos: (app) => {
     app.get('/', function (req, res) {
-      if(req.session.user || !req.session.user) return verificar_chamados_todos(app, req, res);
+      if(req.session.user) return verificar_chamados_todos(app, req, res);
       res.redirect('/usuario/conectar');
     });
   },
@@ -158,13 +158,15 @@ module.exports = {
 
   render_criar_usuarios: (app) => {
     app.get('/usuario/criar', function (req, res) {
-      render_criar_usuarios(app, req, res);
+      if(req.session.user) return render_criar_usuarios(app, req, res);
+      res.redirect('/usuario/conectar');
     });
   },
 
   cadastrar_usuarios: (app) => {
     app.post('/usuario/cadastrar', function (req, res) {
       const invalidInput = validarDadosUsuario(req, res);
+      if(!req.session.user) return res.redirect("/usuario/conectar");
       if(invalidInput) return render_erro_criar_usuarios(app, req, res, invalidInput);
       cadastrarUsuario(app, req, res);
     });
@@ -172,8 +174,8 @@ module.exports = {
 
   listar_usuarios: (app) => {
     app.get('/usuario/listar', function(req, res){
-      console.log('sim');
-      listar_usuarios(app, req, res);
+      if(req.session.user) return listar_usuarios(app, req, res);
+      res.redirect("/usuario/conectar");
     });
   },
 

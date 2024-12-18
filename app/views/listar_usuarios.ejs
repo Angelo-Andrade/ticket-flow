@@ -47,16 +47,21 @@
         <h1 class="title">Listar Usuários</h1>
         <div class="div-usuarios">
             <% usuarios.forEach((usuario) => { %>
-                <div class="dados-usuario">
-                    <h2>Informações do Usuário</h2>
-                    <p><strong>Nome Completo:</strong> <%= usuario && usuario.nome_completo ? usuario.nome_completo : 'Não informado' %></p>
-                    <p><strong>Nome de Guerra:</strong> <%= usuario && usuario.nome_guerra ? usuario.nome_guerra : 'Não informado' %></p>
-                    <p><strong>Telefone:</strong> <%= usuario && usuario.telefone ? usuario.telefone : 'Não informado' %></p>
-                    <p><strong>E-mail:</strong> <%= usuario && usuario.email ? usuario.email : 'Não informado' %></p>
-                    <p><strong>Tipo de Usuário:</strong> <%= usuario && usuario.tipo ? (usuario.tipo === 'admin' ? 'Administrador' : 'Comum') : 'Não informado' %></p>
-                    <p><strong>Posto/Graduação:</strong> <%= usuario && usuario.descricao ? usuario.descricao : 'Não informado' %></p>
-                    <br>
-                </div>
+                <div class="container">
+                    <div class="dados-usuario">
+                        <form action="/usuario/editar/?id=<%= usuario.id_usuario %>" method="POST">
+                            <h2>Usuário <%= usuario && usuario.nome_completo ? usuario.nome_completo : 'Não informado' %></h2>
+                            <p><strong>Nome de Guerra:</strong> <%= usuario && usuario.nome_guerra ? usuario.nome_guerra : 'Não informado' %></p>
+                            <p><strong>Telefone:</strong> <%= usuario && usuario.telefone ? usuario.telefone : 'Não informado' %></p>
+                            <p><strong>E-mail:</strong> <%= usuario && usuario.email ? usuario.email : 'Não informado' %></p>
+                            <p><strong>Tipo de Usuário:</strong> <%= usuario && usuario.tipo ? (usuario.tipo === 'admin' ? 'Administrador' : 'Comum') : 'Não informado' %></p>
+                            <p><strong>Posto/Graduação:</strong> <%= usuario && usuario.descricao ? usuario.descricao : 'Não informado' %></p>
+                    
+                            <!-- Botão de submit dentro do form -->
+                            <button type="submit">Editar</button>
+                        </form>
+                    </div>                    
+                </div>                    
             <% }); %>                
         </div>
         

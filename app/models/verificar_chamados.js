@@ -1,6 +1,6 @@
 module.exports = {
   verificar_chamados_todos: (dbConnection, callback) => {
-    console.log("[Model verificar_chamados]");
+    console.log("[Model verificar_chamados_todos ]");
     const sql = `SELECT 
                     c.id_chamado, 
                     c.descricao AS descricao_chamado, 
@@ -22,7 +22,12 @@ module.exports = {
                   c.status_chamado ASC,
                   c.data_criacao ASC;`;
 
-    dbConnection.query(sql, callback);
+    dbConnection.query(sql, (error, result) =>{
+        if(error) {
+            return callback(error, null);
+        }
+        callback(null, result);
+    });
   },
 
   verificar_chamados_filtrados: (dbConnection, filter, callback) => {
@@ -50,6 +55,11 @@ module.exports = {
                   c.data_criacao ASC;`;
 
                   
-    dbConnection.query(sql, callback);
+    dbConnection.query(sql, (error, result) =>{
+        if(error) {
+            return callback(error, null);
+        }
+        callback(null, result);
+    });
   }
 }
