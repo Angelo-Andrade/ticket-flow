@@ -1,5 +1,5 @@
 const  dbConnection = require("../../config/dbConnection");
-const { verificar_chamados_todos, verificar_chamados_filtrados } = require("../models/verificar_chamados");
+const { verificar_chamados_todos, verificar_chamados_filtrados, alterar_chamado } = require("../models/verificar_chamados");
 const { criar_chamados, getCategoriaChamados } = require('../models/criar_chamados');
 const { excluir_chamado } = require('../models/excluir_chamados');
 
@@ -180,3 +180,32 @@ module.exports.criar_chamado = (app, req, res) => {
     }
   };
 
+
+  module.exports.alterar_chamado = (app, req, res) => {
+    console.log('[Controller Alterar Chamados]');
+    try {
+      const { id, descricao, status_chamado, urgencia } = req.body;
+  
+      console.log('Dados recebidos:', { id, descricao, status_chamado, urgencia });
+  
+      const dbConn = dbConnection();
+      alterar_chamado(dbConn, { id, descricao, status_chamado, urgencia }, (error, result) => {
+        if (error) {
+          console.error('Erro ao alterar chamado:', error);
+          return res.status(500).render('notfound.ejs', {
+            errorMessage: 'Erro ao alterar chamado: ' + error.sqlMessage,
+          });
+        }
+  
+        res.redirect('/');
+      });
+    } catch (error) {
+      console.error('[Controller alterar_chamado] Erro com a query:', error);
+      return res.status(500).render('notfound.ejs', {
+        errorMessage: 'Erro ao alterar chamado: ' + error.message,
+      });
+    } finally {
+      if (dbConn) dbConnection.closeConnection(dbConn);
+    }
+  };
+  

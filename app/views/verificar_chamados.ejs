@@ -66,40 +66,59 @@
         <ul id="chamados-lista">
             <% if (tickets && tickets.length > 0) { %>
                 <% tickets.forEach(function(ticket) { %>
-                    <li id="<%= ticket.id_chamado %>" class="chamado-item">
+                    <li id="ticket-<%= ticket.id_chamado %>" class="chamado-item">
                         <div class="chamado-info">
                             <div class="container">
                                 <div class="div-tickets">
                                     <div class="div-ticket">
-                                        <form action="/chamado/alterar/" method="POST">
-                                            <button type="submit" name="id" value="<%= ticket.id_chamado %>" class="btn btn-primary">Alterar</button>
-                                            <p><strong>Solicitante:</strong> <%= ticket.descricao_posto_grad %> <%= ticket.nome_guerra %></p>
-                                            <p><strong>Categoria:</strong> <%= ticket.descricao_categoria %></p>
-                                            <p><strong>Descrição:</strong> <%= ticket.descricao_chamado %></p>
-                                            <p><strong>Urgência:</strong> <%= ticket.urgencia %></p>
-                                            <p><strong>Data e Hora:</strong> <%= ticket.data_criacao %></p>
-                                            <p><strong>Status:</strong> <span class="status"><%= ticket.status_chamado %></span></p>
-                                        </form>
-
-
+                                        <!-- Informações do Chamado -->
+                                        <p><strong>Solicitante:</strong> <%= ticket.descricao_posto_grad %> <%= ticket.nome_guerra %></p>
+                                        <p><strong>Categoria:</strong> <%= ticket.descricao_categoria %></p>
+                                        <p><strong>Descrição:</strong> <%= ticket.descricao_chamado %></p>
+                                        <p><strong>Urgência:</strong> <%= ticket.urgencia %></p>
+                                        <p><strong>Data e Hora:</strong> <%= ticket.data_criacao %></p>
+                                        <p><strong>Status:</strong> <span class="status"><%= ticket.status_chamado %></span></p>
+        
+                                        <!-- Botões de Ações -->
                                         <div class="ticket-actions">
-                                            
+                                            <!-- Botão Alterar -->
+                                            <button class="btn btn-primary" onclick="toggleEditForm('<%= ticket.id_chamado %>')">Alterar</button>
+        
+                                            <!-- Botão Excluir -->
                                             <form action="/chamado/excluir/" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir?');" style="display:inline;">
                                                 <button type="submit" name="id" value="<%= ticket.id_chamado %>" class="btn btn-danger">Excluir</button>
                                             </form>
                                         </div>
-
-
-                                        <!-- PARA SER IMPLEMENTADO FUTURAMENTE   
-                                        <select>
-                                            <option value="Aberto">Aberto</option>
-                                            <option value="Em andamento">Em andamento</option>
-                                            <option value="Fechado">Fechado</option>
-                                        </select> -->
+        
+                                        <!-- Formulário de Edição Inline -->
+                                        <form id="edit-form-<%= ticket.id_chamado %>" action="/chamado/alterar/" method="POST" class="edit-form" style="display: none; margin-top: 15px;">
+                                            <input type="hidden" name="id" value="<%= ticket.id_chamado %>">
+                                            <div class="form-group">
+                                                <label for="descricao-<%= ticket.id_chamado %>">Descrição:</label>
+                                                <textarea id="descricao-<%= ticket.id_chamado %>" name="descricao" class="form-control"><%= ticket.descricao_chamado %></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="status-<%= ticket.id_chamado %>">Status:</label>
+                                                <select id="status-<%= ticket.id_chamado %>" name="status_chamado" class="form-control">
+                                                    <option value="Aberto" <%= ticket.status_chamado === 'Aberto' ? 'selected' : '' %>>Aberto</option>
+                                                    <option value="Em andamento" <%= ticket.status_chamado === 'Em andamento' ? 'selected' : '' %>>Em andamento</option>
+                                                    <option value="Fechado" <%= ticket.status_chamado === 'Fechado' ? 'selected' : '' %>>Fechado</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="urgencia-<%= ticket.id_chamado %>">Urgência:</label>
+                                                <select id="urgencia-<%= ticket.id_chamado %>" name="urgencia" class="form-control">
+                                                    <option value="Baixa" <%= ticket.urgencia === 'Baixa' ? 'selected' : '' %>>Baixa</option>
+                                                    <option value="Média" <%= ticket.urgencia === 'Média' ? 'selected' : '' %>>Média</option>
+                                                    <option value="Alta" <%= ticket.urgencia === 'Alta' ? 'selected' : '' %>>Alta</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-success">Salvar</button>
+                                                <button type="button" class="btn btn-secondary" onclick="toggleEditForm('<%= ticket.id_chamado %>')">Cancelar</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <!-- PARA SER IMPLEMENTADO FUTURAMENTE 
-                                    <button class="btn-cancelar" onclick="confirmarCancelamento('<%= ticket.id_chamado %>', this)">Cancelar</button>
-                                    -->
                                 </div>
                             </div>
                         </div>
@@ -107,8 +126,17 @@
                 <% }); %>
             <% } else { %>
                 <p>Nenhum chamado encontrado.</p>
-            <% } %>     
+            <% } %>
         </ul>
+        
+        <script>
+            // Função para alternar a exibição do formulário de edição
+            function toggleEditForm(ticketId) {
+                const form = document.getElementById(`edit-form-${ticketId}`);
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            }
+        </script>
+        
         
         <p></p>
         <!--  PARA SER IMPLEMENTADO FUTURAMENTE

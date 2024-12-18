@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { excluir_chamado, verificar_chamados_todos, verificar_chamados_filtrados, criar_chamado, render_criar_chamados } = require('../controllers/chamados');
+const { excluir_chamado, verificar_chamados_todos, verificar_chamados_filtrados, criar_chamado, render_criar_chamados, alterar_chamado } = require('../controllers/chamados');
 const { render_conectar, autenticar, desconectar, render_criar_usuarios, cadastrarUsuario, render_erro_criar_usuarios, listar_usuarios } = require('../controllers/usuarios');
 
 const schemaUsuario = Joi.object({
@@ -125,6 +125,13 @@ module.exports = {
   excluir_chamado: (app) => {
     app.post('/chamado/excluir', function (req, res) {
       if(req.session.user) return excluir_chamado(app, req, res);
+      res.redirect('/usuario/conectar');
+    });
+  },
+
+  alterar_chamado: (app) => {
+    app.post('/chamado/alterar', function (req, res) {
+      if(req.session.user) return alterar_chamado(app, req, res);
       res.redirect('/usuario/conectar');
     });
   },

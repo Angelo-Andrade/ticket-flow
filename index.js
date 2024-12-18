@@ -7,6 +7,7 @@ routes.verificar_chamados_filtrados(app);
 routes.render_criar_chamados(app);
 routes.criar_chamado(app);
 routes.excluir_chamado(app);
+routes.alterar_chamado(app);
 routes.render_conectar(app);
 routes.autenticar_usuario(app);
 routes.desconectar_usuario(app);

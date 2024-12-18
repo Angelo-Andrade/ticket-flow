@@ -61,5 +61,19 @@ module.exports = {
         }
         callback(null, result);
     });
-  }
+  },
+
+  alterar_chamado(dbConn, chamado, callback) {
+    const sql = `
+      UPDATE chamado
+      SET descricao = ?, status_chamado = ?, urgencia = ?
+      WHERE id_chamado = ?`;
+  
+    dbConn.query(
+      sql,
+      [chamado.descricao, chamado.status_chamado, chamado.urgencia, chamado.id],
+      callback
+    );
+
+  },
 }
