@@ -10,7 +10,7 @@ module.exports.verificar_chamados_todos = (app, req, res) => {
   try {
     dbConn = dbConnection();
     if (req.session.user.user_type === 'admin'){
-      verificar_chamados_todos(dbConn, '', (error, result) => {
+      verificar_chamados_todos(dbConn, (error, result) => {
         if (error) {
           console.error('Erro ao buscar chamados:', error);
           return res.status(500).render('notfound.ejs', {
