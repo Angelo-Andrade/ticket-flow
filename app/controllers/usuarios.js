@@ -1,6 +1,6 @@
 const { hash } = require("bcrypt");
 const dbConnection = require("../../config/dbConnection");
-const { getUser, getUsers, insertNewUser, getPostoGrad } = require('../models/usuarios.js');
+const { getUser, getUsers, insertNewUser, getPostoGrad, updateUser, deactivateUser } = require('../models/usuarios.js');
 const { bcryptCompareHash, bcryptGenerateHash } = require('../utils/bcrypt.js');
 
 module.exports.render_conectar = (app, req, res) => {
@@ -68,7 +68,7 @@ module.exports.desconectar = (app, req, res) => {
             console.log(err);
             return res.redirect('/');
         }
-        res.redirect('/usuario/conectar');
+        res.redirect('/usuarios/conectar');
     });
 }
 
@@ -143,7 +143,7 @@ module.exports.cadastrarUsuario = async (app, req, res) => {
                 console.error('Erro na consulta:', error);
                 return res.render('criar_usuario.ejs', { dados: req.body, posto_grads: postoGrads, error: error});
             }
-            res.redirect('/usuario/listar');
+            res.redirect('/usuarios');
         });
     } catch (error) {
         console.log('[Controller usuarios] erro cadastrar usuario', error);
@@ -179,19 +179,15 @@ module.exports.listar_usuarios = async (app, req, res) => {
 
 }
 
-module.exports.alterar_usuario = async (app, req, res) => {
-    console.log('[Controller usuarios] alterar usuario');
+module.exports.render_alterar_usuario = async (app, req, res) => {
+    console.log('[Controller usuarios] render alterar usuario');
+    const email = req.query.email;
 
-    
     try {
         dbConn = dbConnection();
-        await getUsers(dbConn, (error, result) =>{
-            if (error) {
-                console.error('Erro na consulta:', error);
-                res.redirect('/');
-            }
-            res.render('listar_usuarios.ejs', { usuarios: result });
-        });
+        const user = await getUser(dbConn, email);
+        const posto_grad = await getPostoGrad(dbConn);
+        res.render('alterar_usuarios.ejs', { dados: user, posto_grads: posto_grad, error: null });
     } catch (error) {
         console.log('[Controller usuarios] erro cadastrar usuario', error);
         return res.status(500).render('notfound.ejs', {
@@ -200,5 +196,49 @@ module.exports.alterar_usuario = async (app, req, res) => {
     } finally {
         if(dbConn) dbConnection.closeConnection(dbConn);
     }
-
 }
+
+module.exports.alterar_usuario = async (app, req, res) => {
+    console.log('[Controller usuarios] alterar usuario');
+    const id = req.query.id;
+    const { nome_completo, nome_guerra, telefone, email, tipo, id_posto_grad } = req.body; 
+    console.log(req.query, req.body, id);
+    
+    try {
+        dbConn = dbConnection();
+        await updateUser(dbConn, id, nome_completo, nome_guerra, telefone, email, tipo, id_posto_grad, (error, result) =>{
+            if (error) {
+                console.error('Erro na consulta:', error);
+                res.redirect('/');
+            }
+        });
+        res.redirect('/usuarios');
+    } catch (error) {
+        console.log('[Controller usuarios] erro cadastrar usuario', error);
+        return res.status(500).render('notfound.ejs', {
+            errorMessage: 'Erro ao buscar dados: ' + error.sqlMessage
+        });
+    } finally {
+        if(dbConn) dbConnection.closeConnection(dbConn);
+    }
+}
+
+module.exports.desativar_usuarios = async (app, req, res) => {
+    console.log('[Controller usuarios] desativar_usuario');
+    const id = req.query.id;
+    
+
+    try {
+        dbConn = dbConnection();
+        await deactivateUser(dbConn, id);
+        res.redirect('/usuarios');        
+    } catch (error) {
+        console.log('[Controller usuarios] erro cadastrar usuario', error);
+        return res.status(500).render('notfound.ejs', {
+            errorMessage: 'Erro ao buscar dados: ' + error.sqlMessage
+        });
+    } finally {
+        if(dbConn) dbConnection.closeConnection(dbConn);
+    }
+}
+

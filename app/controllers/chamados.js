@@ -107,7 +107,32 @@ module.exports.render_criar_chamados = (app, req, res) => {
               });
           }
           // Passa as categorias para a view
-          res.render('criar_chamados.ejs', { categorias: result });
+          res.render('criar_chamados.ejs', { categorias: result, error: null });
+      });
+    } catch (error) {
+      console.log('[Controller verficar_chamados] erro com a querry' + error);
+      return res.status(500).render('notfound.ejs', {
+        errorMessage: 'Erro ao buscar chamados: ' + error.sqlMessage
+      });
+    }
+    finally {
+      if(dbConn) dbConnection.closeConnection(dbConn);
+    }
+};
+
+module.exports.render_erro_criar_chamados = (app, req, res, invalidInput) => {
+    console.log('[Controller erro criar chamados]');
+    try {
+      dbConn = dbConnection();
+      getCategoriaChamados(dbConn, (error, result) => {
+          if (error) {
+              console.error(error);
+              return res.render('notfound.ejs', {
+                errorMessage: 'Erro ao carregar a página: ' + error
+              });
+          }
+          // Passa as categorias para a view
+          res.render('criar_chamados.ejs', { categorias: result, error });
       });
     } catch (error) {
       console.log('[Controller verficar_chamados] erro com a querry' + error);

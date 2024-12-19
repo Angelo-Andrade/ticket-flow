@@ -15,6 +15,7 @@ CREATE TABLE usuario (
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(100) NOT NULL,
     tipo ENUM('admin', 'comum') NOT NULL,
+    status_usuario ENUM('ativo', 'desativado') NOT NULL,
     id_posto_grad INT,
         FOREIGN KEY (id_posto_grad) REFERENCES
         posto_grad(id_posto_grad)
