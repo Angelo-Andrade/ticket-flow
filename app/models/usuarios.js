@@ -19,6 +19,7 @@ module.exports = {
     getUsers: (dbConn, callback) => {
         const sql = `SELECT * FROM usuario u 
                             JOIN posto_grad p ON p.id_posto_grad = u.id_posto_grad
+                            WHERE status_usuario = 'ativo'
                             ORDER BY nome_completo ASC;`;
 
         dbConn.query(sql, (error, result) => {
@@ -54,7 +55,53 @@ module.exports = {
                 return resolve(result);
             });
         });
-    }    
+    },
+    
+    updateUser: (dbConn, id, name, war_name, phone, email, type, id_posto_grad) => {
+        return new Promise((resolve, reject) => {
+            const sql = `UPDATE usuario 
+                            SET nome_completo = ?, nome_guerra = ?, telefone = ?, email = ?, tipo = ?, id_posto_grad = ?
+                            WHERE id_usuario = ?;`;
+
+            dbConn.query(sql, [name, war_name, phone, email, type, id_posto_grad, id], (error, result) => {
+                if(error) {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        });
+    },
+
+    deactivateUser: (dbConn, id) => {
+        return new Promise((resolve, reject) => {
+            const sql = "UPDATE usuario SET status_usuario = 'desativado' WHERE id_usuario = ?;";
+            dbConn.query(sql, [id], (error, result) => {
+                console.log(error, result);
+                if(error) {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        });
+    }
 }
 
+/*
+ id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nome_completo VARCHAR(100) NOT NULL,
+    nome_guerra VARCHAR(100) NOT NULL,
+    telefone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(100) NOT NULL,
+    tipo ENUM('admin', 'comum') NOT NULL,
+    status_usuario ENUM('ativo', 'desativado') NOT NULL,
+    id_posto_grad INT,
+        FOREIGN KEY (id_posto_grad) REFERENCES
+        posto_grad(id_posto_grad)
+
+
+
+
+
+        */
 
