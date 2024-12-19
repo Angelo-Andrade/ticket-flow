@@ -1,6 +1,6 @@
 const Joi = require('joi');
-const { excluir_chamado, verificar_chamados_todos, verificar_chamados_filtrados, criar_chamado, render_criar_chamados } = require('../controllers/chamados');
-const { render_conectar, autenticar, desconectar, render_criar_usuarios, cadastrarUsuario, render_erro_criar_usuarios, listar_usuarios } = require('../controllers/usuarios');
+const { excluir_chamado, verificar_chamados_todos, verificar_chamados_filtrados, criar_chamado, render_criar_chamados, render_erro_criar_chamados } = require('../controllers/chamados');
+const { render_conectar, autenticar, desconectar, render_criar_usuarios, cadastrarUsuario, render_erro_criar_usuarios, listar_usuarios, render_alterar_usuario, alterar_usuario, desativar_usuarios } = require('../controllers/usuarios');
 
 const schemaUsuario = Joi.object({
   nome_completo: Joi.string()
@@ -88,13 +88,13 @@ const schemaChamado = Joi.object({
     })
 });
 
-const validarDadosChamado = (req, res, next) => {
+const validarDadosChamado = (req) => {
   const { error } = schemaChamado.validate(req.body);
-  if (error) return res.status(400).render('criar_chamados.ejs');
-  next();
+  console.log(error);
+  return error;
 };
 
-const validarDadosUsuario = (req, res) => {
+const validarDadosUsuario = (req) => {
   const { error } = schemaUsuario.validate(req.body);
   console.log(error);
   return error;
@@ -104,78 +104,102 @@ module.exports = {
   verificar_chamados_todos: (app) => {
     app.get('/', function (req, res) {
       if(req.session.user) return verificar_chamados_todos(app, req, res);
-      res.redirect('/usuario/conectar');
+      res.redirect('/usuarios/conectar');
     });
   },
 
   verificar_chamados_filtrados: (app) => {
     app.get('/filtrar', function (req, res) {
       if(req.session.user) return verificar_chamados_filtrados(app, req, res);
-      res.redirect('/usuario/conectar');
+      res.redirect('/usuarios/conectar');
     });
   },
   
   criar_chamado: (app) => {
     app.post('/criar_chamado', function (req, res) {
-      if(req.session.user) return criar_chamado(app, req, res);
-      res.redirect('/usuario/conectar');
+      const invalidInput = validarDadosChamado(req);
+      if(!req.session.user) return res.redirect('/usuarios/conectar');
+      if(invalidInput) return render_erro_criar_chamados(app, req, res);
+      criar_chamado(app, req, res);
     });
   },
 
   excluir_chamado: (app) => {
     app.post('/chamado/excluir', function (req, res) {
       if(req.session.user) return excluir_chamado(app, req, res);
-      res.redirect('/usuario/conectar');
+      res.redirect('/usuarios/conectar');
     });
   },
   
   render_criar_chamados: (app) => {
     app.get('/criar_chamados', function (req, res) {
       if(req.session.user) return render_criar_chamados(app, req, res);
-       res.redirect('/usuario/conectar');
+       res.redirect('/usuarios/conectar');
     });
   },
 
   render_conectar: (app) => {
-    app.get('/usuario/conectar', function (req, res) {
+    app.get('/usuarios/conectar', function (req, res) {
       if(req.session.user) return res.redirect('/');
       render_conectar(app, req, res);
     });
   },
 
   autenticar_usuario: (app) => {
-    app.post('/usuario/autenticar', function (req, res) {
+    app.post('/usuarios/autenticar', function (req, res) {
       if(req.session.user) return res.redirect('/'); 
       autenticar(app, req, res);
     });
   },
 
   desconectar_usuario: (app) => {
-    app.get('/usuario/desconectar', function (req, res) {
+    app.get('/usuarios/desconectar', function (req, res) {
       desconectar(app, req, res);
     });
   },
 
   render_criar_usuarios: (app) => {
-    app.get('/usuario/criar', function (req, res) {
+    app.get('/usuarios/criar', function (req, res) {
       if(req.session.user) return render_criar_usuarios(app, req, res);
-      res.redirect('/usuario/conectar');
+      res.redirect('/usuarios/conectar');
     });
   },
 
   cadastrar_usuarios: (app) => {
-    app.post('/usuario/cadastrar', function (req, res) {
+    app.post('/usuarios/cadastrar', function (req, res) {
       const invalidInput = validarDadosUsuario(req, res);
-      if(!req.session.user) return res.redirect("/usuario/conectar");
+      if(!req.session.user) return res.redirect("/usuarios/conectar");
       if(invalidInput) return render_erro_criar_usuarios(app, req, res, invalidInput);
       cadastrarUsuario(app, req, res);
     });
   },
 
   listar_usuarios: (app) => {
-    app.get('/usuario/listar', function(req, res){
+    app.get('/usuarios', function(req, res){
       if(req.session.user) return listar_usuarios(app, req, res);
-      res.redirect("/usuario/conectar");
+      res.redirect("/usuarios/conectar");
+    });
+  },
+  
+  render_editar_usuarios: (app) => {
+    app.get('/usuarios/editar', function(req, res){
+      if(req.session.user) return render_alterar_usuario(app, req, res);
+      res.redirect("/usuarios/conectar");
+    });
+  },
+  
+  editar_usuarios: (app) => {
+    app.post('/usuarios/editar', function(req, res){
+      if(req.session.user) return alterar_usuario(app, req, res);
+      res.redirect("/usuarios/conectar");
+    });
+  },
+  
+  desativar_usuarios: (app) => {
+    app.post('/usuarios/desativar', function(req, res){
+      console.log('sim');
+      if(req.session.user) return desativar_usuarios(app, req, res);
+      res.redirect("/usuarios/conectar");
     });
   },
 

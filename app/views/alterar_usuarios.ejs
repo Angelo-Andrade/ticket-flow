@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TicketFlow - Criar usuário</title>
+    <title>TicketFlow - Alterar usuário</title>
     <link rel="stylesheet" type="text/css" href="/styles/styles.css" />
     <link rel="stylesheet" href="/styles/styles-daltonicos.css" id="daltonic-style" disabled>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -29,7 +29,6 @@
         <button class="color-blind-mode" onclick="toggleDaltonicMode()">Modo Daltônico</button>
     </header>
 
-    
     <nav class="sidebar">
         <ul>
             <img src="https://logodownload.org/wp-content/uploads/2018/02/exercito-brasileiro-logo-2.png" alt="Logo do Exército Brasileiro" style="width: 50px; display: block; margin: 0 auto 20px;"></a>
@@ -43,35 +42,32 @@
     </nav>
     
     <div class="container">
-        <h1 class="title">Criar usuário</h1>
+        <h1 class="title">Alterar usuário</h1>
         <div class="div-usuarios">
-            <form class="form-cadastrar-usuarios" action="/usuario/cadastrar" method="POST">
+            <form class="form-cadastrar-usuarios" action="/usuarios/editar?id=<%= dados[0].id_usuario %>" method="POST">
                 <label for="nome_completo">Nome Completo:</label>
-                <input type="text" id="nome_completo" name="nome_completo" value="<%= dados && dados.nome_completo ? dados.nome_completo : '' %>">
+                <input type="text" id="nome_completo" name="nome_completo" value="<%= dados && dados[0].nome_completo ? dados[0].nome_completo : '' %>">
             
                 <label for="nome_guerra">Nome de Guerra:</label>
-                <input type="text" id="nome_guerra" name="nome_guerra" value="<%= dados && dados.nome_guerra ? dados.nome_guerra : '' %>">
+                <input type="text" id="nome_guerra" name="nome_guerra" value="<%= dados && dados[0].nome_guerra ? dados[0].nome_guerra : '' %>">
             
                 <label for="telefone">Telefone:</label>
-                <input type="text" id="telefone" name="telefone" value="<%= dados && dados.telefone ? dados.telefone : '' %>" maxlength="15" placeholder="(XX) XXXXX-XXXX" pattern="\(\d{2}\)\s\d{4,5}-\d{4}" title="Formato: (XX) XXXXX-XXXX ou (XX) XXXX-XXXX" >
+                <input type="text" id="telefone" name="telefone" value="<%= dados && dados[0].telefone ? dados[0].telefone : '' %>" maxlength="15" placeholder="(XX) XXXXX-XXXX" pattern="\(\d{2}\)\s\d{4,5}-\d{4}" title="Formato: (XX) XXXXX-XXXX ou (XX) XXXX-XXXX" >
             
                 <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" value="<%= dados && dados.email ? dados.email : '' %>">
-            
-                <label for="senha">Senha:</label>
-                <input type="password" id="senha" name="senha" ><button type="button" onclick="toggleVisibilityPassword()">Visualizar</button>
+                <input type="email" id="email" name="email" value="<%= dados && dados[0].email ? dados[0].email : '' %>">
             
                 <label for="tipo">Tipo de Usuário:</label>
                 <select id="tipo" name="tipo" >
-                    <option value="admin" <%= dados && dados.tipo === 'admin' ? 'selected' : '' %>>Administrador</option>
-                    <option value="comum" <%= dados && dados.tipo === 'comum' ? 'selected' : '' %>>Comum</option>
+                    <option value="admin" <%= dados && dados[0].tipo === 'admin' ? 'selected' : '' %>>Administrador</option>
+                    <option value="comum" <%= dados && dados[0].tipo === 'comum' ? 'selected' : '' %>>Comum</option>
                 </select>
                 <br>
             
                 <label for="id_posto_grad">Posto/Graduação:</label>
                 <select id="id_posto_grad" name="id_posto_grad" >
                     <% posto_grads.forEach(posto_grad => { %>
-                        <option value="<%= posto_grad.id_posto_grad %>" <%= dados && dados.id_posto_grad === posto_grad.id_posto_grad ? 'selected' : '' %>><%= posto_grad.descricao %></option>
+                        <option value="<%= posto_grad.id_posto_grad %>" <%= dados && dados[0].id_posto_grad === posto_grad.id_posto_grad ? 'selected' : '' %>><%= posto_grad.descricao %></option>
                     <% }); %>
                 </select>
                 <br>
@@ -83,7 +79,7 @@
                     </div>
                 <% } %>
             
-                <button type="submit">Cadastrar</button>
+                <button type="submit">Editar</button>
             </form>
         </div>
     </div>

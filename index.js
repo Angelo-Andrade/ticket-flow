@@ -13,5 +13,8 @@ routes.desconectar_usuario(app);
 routes.render_criar_usuarios(app);
 routes.cadastrar_usuarios(app);
 routes.listar_usuarios(app);
+routes.render_editar_usuarios(app);
+routes.editar_usuarios(app);
+routes.desativar_usuarios(app);
 routes.render_not_found(app);
 

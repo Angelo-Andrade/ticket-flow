@@ -55,11 +55,6 @@ module.exports = {
                   c.data_criacao ASC;`;
 
                   
-    dbConnection.query(sql, (error, result) =>{
-        if(error) {
-            return callback(error, null);
-        }
-        callback(null, result);
-    });
+    dbConnection.query(sql, callback);
   }
 }

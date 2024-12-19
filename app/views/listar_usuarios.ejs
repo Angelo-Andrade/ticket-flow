@@ -31,15 +31,16 @@
         <button class="color-blind-mode" onclick="toggleDaltonicMode()">Modo Daltônico</button>
     </header>
 
+    
     <nav class="sidebar">
         <ul>
             <img src="https://logodownload.org/wp-content/uploads/2018/02/exercito-brasileiro-logo-2.png" alt="Logo do Exército Brasileiro" style="width: 50px; display: block; margin: 0 auto 20px;"></a>
             <li><a href="/"><i class="fas fa-history icon"></i> <span>Histórico de Chamados</span></a></li>
             <li><a href="/criar_chamados"><i class="fas fa-plus icon"></i> <span>Abrir Chamado</span></a></li>
             <li><a href="/filtrar?filtro=c.status_chamado&valor=aberto"><i class="fas fa-folder-open icon"></i> <span>Chamados em Aberto</span></a></li>
-            <li><a href="/usuario/listar"><i class="fas fa-users icon"></i> <span>Usuários Cadastrados</span></a></li>
-            <li><a href="/usuario/criar"><i class="fas fa-user-plus icon"></i> <span>Cadastrar Novo Usuário</span></a></li>
-            <li><a href="/usuario/desconectar"><i class="fas fa-sign-out-alt icon"></i> <span>Logout</span></a></li>
+            <li><a href="/usuarios"><i class="fas fa-users icon"></i> <span>Usuários Cadastrados</span></a></li>
+            <li><a href="/usuarios/criar"><i class="fas fa-user-plus icon"></i> <span>Cadastrar Novo Usuário</span></a></li>
+            <li><a href="/usuarios/desconectar"><i class="fas fa-sign-out-alt icon"></i> <span>Logout</span></a></li>
         </ul>
     </nav>
     
@@ -49,17 +50,22 @@
             <% usuarios.forEach((usuario) => { %>
                 <div class="container">
                     <div class="dados-usuario">
-                        <form action="/usuario/editar/?id=<%= usuario.id_usuario %>" method="POST">
-                            <h2>Usuário <%= usuario && usuario.nome_completo ? usuario.nome_completo : 'Não informado' %></h2>
-                            <p><strong>Nome de Guerra:</strong> <%= usuario && usuario.nome_guerra ? usuario.nome_guerra : 'Não informado' %></p>
-                            <p><strong>Telefone:</strong> <%= usuario && usuario.telefone ? usuario.telefone : 'Não informado' %></p>
-                            <p><strong>E-mail:</strong> <%= usuario && usuario.email ? usuario.email : 'Não informado' %></p>
-                            <p><strong>Tipo de Usuário:</strong> <%= usuario && usuario.tipo ? (usuario.tipo === 'admin' ? 'Administrador' : 'Comum') : 'Não informado' %></p>
-                            <p><strong>Posto/Graduação:</strong> <%= usuario && usuario.descricao ? usuario.descricao : 'Não informado' %></p>
+                        <h2>Usuário <%= usuario && usuario.nome_completo ? usuario.nome_completo : 'Não informado' %></h2>
+                        <p><strong>Nome de Guerra:</strong> <%= usuario && usuario.nome_guerra ? usuario.nome_guerra : 'Não informado' %></p>
+                        <p><strong>Telefone:</strong> <%= usuario && usuario.telefone ? usuario.telefone : 'Não informado' %></p>
+                        <p><strong>E-mail:</strong> <%= usuario && usuario.email ? usuario.email : 'Não informado' %></p>
+                        <p><strong>Tipo de Usuário:</strong> <%= usuario && usuario.tipo ? (usuario.tipo === 'admin' ? 'Administrador' : 'Comum') : 'Não informado' %></p>
+                        <p><strong>Posto/Graduação:</strong> <%= usuario && usuario.descricao ? usuario.descricao : 'Não informado' %></p>
                     
-                            <!-- Botão de submit dentro do form -->
-                            <button type="submit">Editar</button>
-                        </form>
+                        <div class="user-actions">
+                            <form action="/usuarios/editar" method="GET" style="display:inline;">
+                                <input type="hidden" name="email" value="<%= usuario.email %>">
+                                <button type="submit">Editar</button>
+                            </form>
+                            <form action="/usuarios/desativar?id=<%= usuario.id_usuario %>" method="POST" style="display:inline;">
+                                <button type="submit">Desativar</button>
+                            </form>
+                        </div>
                     </div>                    
                 </div>                    
             <% }); %>                
