@@ -55,8 +55,12 @@
                 <input type="text" id="telefone" name="telefone" value="<%= dados && dados[0].telefone ? dados[0].telefone : '' %>" maxlength="15" placeholder="(XX) XXXXX-XXXX" pattern="\(\d{2}\)\s\d{4,5}-\d{4}" title="Formato: (XX) XXXXX-XXXX ou (XX) XXXX-XXXX" >
             
                 <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" value="<%= dados && dados[0].email ? dados[0].email : '' %>">
-            
+                <input id="email" name="email" value="<%= dados && dados[0].email ? dados[0].email : '' %>">
+                
+                <p>Deixe em branco para não alterar a senha antiga do usuário</p>
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="novasenha"><button type="button" onclick="toggleVisibilityPassword()">Visualizar</button>
+
                 <label for="tipo">Tipo de Usuário:</label>
                 <select id="tipo" name="tipo" >
                     <option value="admin" <%= dados && dados[0].tipo === 'admin' ? 'selected' : '' %>>Administrador</option>

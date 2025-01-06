@@ -1,6 +1,6 @@
 const { hash } = require("bcrypt");
 const dbConnection = require("../../config/dbConnection");
-const { getUser, getUsers, insertNewUser, getPostoGrad, updateUser, deactivateUser } = require('../models/usuarios.js');
+const { getUserByEmail, getUserById, getUsers, insertNewUser, getPostoGrad, updateUser, deactivateUser } = require('../models/usuarios.js');
 const { bcryptCompareHash, bcryptGenerateHash } = require('../utils/bcrypt.js');
 
 module.exports.render_conectar = (app, req, res) => {
@@ -13,7 +13,7 @@ module.exports.autenticar = async (app, req, res) => {
     try {
         dbConn = dbConnection();
         const { email, password } = req.body;
-        const user = await getUser(dbConn, email, (error, result) =>{
+        const user = await getUserByEmail(dbConn, email, (error, result) =>{
             if (error) {
                 console.error('Erro na consulta:', error);
                 return res.status(500).render('notfound.ejs', {
@@ -179,15 +179,15 @@ module.exports.listar_usuarios = async (app, req, res) => {
 
 }
 
-module.exports.render_alterar_usuario = async (app, req, res) => {
+module.exports.render_alterar_usuario = async (app, req, res, error) => {
     console.log('[Controller usuarios] render alterar usuario');
-    const email = req.query.email;
-
+    const { id } = req.query || error[0];
+    console.log('[Controller render alterar usuario] id, req, error:', id, req.query, error);
     try {
         dbConn = dbConnection();
-        const user = await getUser(dbConn, email);
+        const user = await getUserById(dbConn, id);
         const posto_grad = await getPostoGrad(dbConn);
-        res.render('alterar_usuarios.ejs', { dados: user, posto_grads: posto_grad, error: null });
+        res.render('alterar_usuarios.ejs', { dados: user, posto_grads: posto_grad, error: error[1] });
     } catch (error) {
         console.log('[Controller usuarios] erro cadastrar usuario', error);
         return res.status(500).render('notfound.ejs', {
@@ -201,12 +201,19 @@ module.exports.render_alterar_usuario = async (app, req, res) => {
 module.exports.alterar_usuario = async (app, req, res) => {
     console.log('[Controller usuarios] alterar usuario');
     const id = req.query.id;
-    const { nome_completo, nome_guerra, telefone, email, tipo, id_posto_grad } = req.body; 
+    const { nome_completo, nome_guerra, telefone, email, novasenha, tipo, id_posto_grad } = req.body;
+    let hash = null;
+    if(novasenha) {
+        hash = await bcryptGenerateHash(novasenha);
+    }
+    console.log('[Controller usuarios] nova senha: ', novasenha);
+    console.log('[Controller usuarios] hash: ', hash);
+    
     console.log(req.query, req.body, id);
     
     try {
         dbConn = dbConnection();
-        await updateUser(dbConn, id, nome_completo, nome_guerra, telefone, email, tipo, id_posto_grad, (error, result) =>{
+        await updateUser(dbConn, id, nome_completo, nome_guerra, telefone, email, hash, tipo, id_posto_grad, (error, result) =>{
             if (error) {
                 console.error('Erro na consulta:', error);
                 res.redirect('/');

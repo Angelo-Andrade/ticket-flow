@@ -58,8 +58,8 @@
                         <p><strong>Posto/Graduação:</strong> <%= usuario && usuario.descricao ? usuario.descricao : 'Não informado' %></p>
                     
                         <div class="user-actions">
-                            <form action="/usuarios/editar" method="GET" style="display:inline;">
-                                <input type="hidden" name="email" value="<%= usuario.email %>">
+                            <form action="/usuarios/editar %>" method="GET" style="display:inline;">
+                                <input type="hidden" name="id" value="<%= usuario.id_usuario %>">
                                 <button type="submit">Editar</button>
                             </form>
                             <form action="/usuarios/desativar?id=<%= usuario.id_usuario %>" method="POST" style="display:inline;">

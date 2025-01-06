@@ -1,13 +1,28 @@
 const { reject } = require("bcrypt/promises");
 
 module.exports = {
-    getUser: (dbConn, user) => {
+    getUserByEmail: (dbConn, user) => {
         return new Promise ((resolve, reject) => {
             const sql = `SELECT * FROM usuario u 
                             JOIN posto_grad p ON p.id_posto_grad = u.id_posto_grad
                             WHERE u.email = ? LIMIT 1`;
     
             dbConn.query(sql, [user], (error, result) => {
+                if(error) {
+                    return reject(error); // 
+                }
+                resolve(result); 
+            });
+        }) 
+    },
+
+    getUserById: (dbConn, id) => {
+        return new Promise ((resolve, reject) => {
+            const sql = `SELECT * FROM usuario u 
+                            JOIN posto_grad p ON p.id_posto_grad = u.id_posto_grad
+                            WHERE u.id_usuario = ?`;
+    
+            dbConn.query(sql, [id], (error, result) => {
                 if(error) {
                     return reject(error); // 
                 }
@@ -57,18 +72,33 @@ module.exports = {
         });
     },
     
-    updateUser: (dbConn, id, name, war_name, phone, email, type, id_posto_grad) => {
+    updateUser: (dbConn, id, name, war_name, phone, email, hash, type, id_posto_grad) => {
+        console.log('[Model usuarios] atualizar usuário');
         return new Promise((resolve, reject) => {
             const sql = `UPDATE usuario 
                             SET nome_completo = ?, nome_guerra = ?, telefone = ?, email = ?, tipo = ?, id_posto_grad = ?
                             WHERE id_usuario = ?;`;
 
             dbConn.query(sql, [name, war_name, phone, email, type, id_posto_grad, id], (error, result) => {
-                if(error) {
+                console.log('[Model usuarios] mudando dados do usuário');
+                if (error) {
                     return reject(error);
                 }
-                return resolve(result);
+                
+                if (hash) {
+                    console.log('[Model usuários] mudando senha: ', hash);
+                    const updateHash = `UPDATE usuario SET senha = ? WHERE id_usuario = ?;`;
+                    dbConn.query(updateHash, [hash, id], (error, result) => {
+                        if (error) {
+                            return reject(error);
+                        }
+                        return resolve(result);
+                    });
+                } else {
+                    return resolve(result);
+                }
             });
+                            
         });
     },
 

@@ -2,7 +2,7 @@ const Joi = require('joi');
 const { excluir_chamado, verificar_chamados_todos, verificar_chamados_filtrados, criar_chamado, render_criar_chamados, render_erro_criar_chamados, alterar_chamado } = require('../controllers/chamados');
 const { render_conectar, autenticar, desconectar, render_criar_usuarios, cadastrarUsuario, render_erro_criar_usuarios, listar_usuarios, render_alterar_usuario, alterar_usuario, desativar_usuarios } = require('../controllers/usuarios');
 
-const schemaUsuario = Joi.object({
+const schemaCadastrarUsuario = Joi.object({
   nome_completo: Joi.string()
     .max(100)
     .required()
@@ -36,7 +36,7 @@ const schemaUsuario = Joi.object({
     }),
 
   senha: Joi.string()
-    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).*$/) // A senha deve ter pelo menos uma letra minúscula, uma maiúscula, um número e um caractere especial
+    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).*$/)
     .min(8)
     .required()
     .messages({
@@ -44,6 +44,64 @@ const schemaUsuario = Joi.object({
       'string.min': 'A senha deve ter pelo menos 8 caracteres.',
       'string.pattern.base': 'A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.'
     }),
+
+  tipo: Joi.string()
+    .valid('admin')
+    .valid('comum')
+    .required()
+    .messages({
+      'string.empty': 'O tipo de usuário é obrigatório.',
+      'any.only': 'Tipo de usuário inválido.',
+    }),
+
+  id_posto_grad: Joi.string()
+    .required()
+    .messages({
+      'string.empty': 'O posto de graduação é obrigatório.',
+    }),
+});
+
+const schemaEditarUsuario = Joi.object({
+  nome_completo: Joi.string()
+    .max(100)
+    .required()
+    .messages({
+      'string.empty': 'O nome é obrigatório.',
+      'string.max': 'O nome não pode exceder 100 caracteres.'
+  }),
+
+  nome_guerra: Joi.string()
+    .max(100)
+    .required()
+    .messages({
+      'string.empty': "Nome de guerra é obrigatório",
+      'string.max': 'O nome de Guerra é grande demais, deve conter no máximo 100 caracteres'
+  }),
+
+  telefone: Joi.string()
+  .pattern(/^\(?\d{2}\)?[\s-]?\d{4,5}[\s-]?\d{4}$/)
+  .required()
+  .messages({
+      'string.empty': 'O Telefone é obrigatório.', 
+      'string.pattern.base': 'Telefone inválido.'
+  }),
+
+  email: Joi.string()
+    .email()
+    .required()
+    .messages({
+      'string.empty': 'O Email é obrigatório.',
+      'string.email.base': 'Email inválido.'
+    }),
+
+  novasenha: Joi.string()
+  .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).*$/)
+  .min(8)
+  .allow('', null)
+  .messages({
+    'string.min': 'A senha deve ter pelo menos 8 caracteres.',
+    'string.pattern.base': 'A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.'
+  }),
 
   tipo: Joi.string()
     .valid('admin')
@@ -94,8 +152,14 @@ const validarDadosChamado = (req) => {
   return error;
 };
 
-const validarDadosUsuario = (req) => {
-  const { error } = schemaUsuario.validate(req.body);
+const validarDadosCadastrarUsuario = (req) => {
+  const { error } = schemaCadastrarUsuario.validate(req.body);
+  console.log(error);
+  return error;
+};
+
+const validarDadosEditarUsuario = (req) => {
+  const { error } = schemaEditarUsuario.validate(req.body);
   console.log(error);
   return error;
 };
@@ -104,21 +168,21 @@ module.exports = {
   verificar_chamados_todos: (app) => {
     app.get('/', function (req, res) {
       if(req.session.user) return verificar_chamados_todos(app, req, res);
-      res.redirect('/usuarios/conectar');
+      res.redirect("/usuarios/conectar?error=auth_required");
     });
   },
 
   verificar_chamados_filtrados: (app) => {
     app.get('/filtrar', function (req, res) {
       if(req.session.user) return verificar_chamados_filtrados(app, req, res);
-      res.redirect('/usuarios/conectar');
+      res.redirect("/usuarios/conectar?error=auth_required");
     });
   },
   
   criar_chamado: (app) => {
     app.post('/criar_chamado', function (req, res) {
       const invalidInput = validarDadosChamado(req);
-      if(!req.session.user) return res.redirect('/usuarios/conectar');
+      if(!req.session.user) return  res.redirect("/usuarios/conectar?error=auth_required");
       if(invalidInput) return render_erro_criar_chamados(app, req, res);
       criar_chamado(app, req, res);
     });
@@ -127,7 +191,7 @@ module.exports = {
   excluir_chamado: (app) => {
     app.post('/chamado/excluir', function (req, res) {
       if(req.session.user) return excluir_chamado(app, req, res);
-      res.redirect('/usuarios/conectar');
+      res.redirect("/usuarios/conectar?error=auth_required");
     });
   },
 
@@ -141,7 +205,7 @@ module.exports = {
   render_criar_chamados: (app) => {
     app.get('/criar_chamados', function (req, res) {
       if(req.session.user) return render_criar_chamados(app, req, res);
-       res.redirect('/usuarios/conectar');
+      res.redirect("/usuarios/conectar?error=auth_required");
     });
   },
 
@@ -168,19 +232,19 @@ module.exports = {
   render_criar_usuarios: (app) => {
     app.get('/usuarios/criar', function (req, res) {
       if(req.session.user) return render_criar_usuarios(app, req, res);
-      res.redirect('/usuarios/conectar');
+      res.redirect("/usuarios/conectar?error=auth_required");
     });
   },
 
   cadastrar_usuarios: (app) => {
     app.post('/usuarios/cadastrar', function (req, res) {
-      const invalidInput = validarDadosUsuario(req, res);
-      if(!req.session.user) return res.redirect("/usuarios/conectar");
+      const invalidInput = validarDadosCadastrarUsuario(req, res);
+      if(!req.session.user) return res.redirect("/usuarios/conectar?error=auth_required");
       if(invalidInput) return render_erro_criar_usuarios(app, req, res, invalidInput);
       cadastrarUsuario(app, req, res);
     });
   },
-
+  
   listar_usuarios: (app) => {
     app.get('/usuarios', function(req, res){
       if(req.session.user) return listar_usuarios(app, req, res);
@@ -190,15 +254,18 @@ module.exports = {
   
   render_editar_usuarios: (app) => {
     app.get('/usuarios/editar', function(req, res){
-      if(req.session.user) return render_alterar_usuario(app, req, res);
+      if(req.session.user) return render_alterar_usuario(app, req, res, [null, null]);
       res.redirect("/usuarios/conectar");
     });
   },
   
   editar_usuarios: (app) => {
     app.post('/usuarios/editar', function(req, res){
-      if(req.session.user) return alterar_usuario(app, req, res);
-      res.redirect("/usuarios/conectar");
+      const invalidInput = [ req.query, validarDadosEditarUsuario(req, res)];
+      console.log('[ROUTES cadastrar usuario] invalidInput: ', invalidInput);
+      if(!req.session.user) return res.redirect("/usuarios/conectar");
+      if(invalidInput[1]) return render_alterar_usuario(app, req, res, invalidInput);
+      alterar_usuario(app, req, res);
     });
   },
   
