@@ -33,6 +33,11 @@ app.use(expressSession({
     },
 }));
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Algo deu errado no servidor!'); 
+});
+
 app.listen(port, function () {
 	console.log("Servidor rodando com express na porta", port);
 });
