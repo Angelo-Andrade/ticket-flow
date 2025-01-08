@@ -56,7 +56,7 @@ module.exports.verificar_chamados_filtrados = (app, req, res) => {
     const filter = req.query.filtro;
     const filter_value = req.query.valor;
     if (req.session.user.user_type === 'admin'){
-      const filterquery = `WHERE ${filter} = '${filter_value}' `
+      const filterquery = `WHERE ${filter} LIKE '%${filter_value}%' `
       verificar_chamados_filtrados(dbConn, filterquery, (error, result) => {
         if (error) {
           console.error('Erro ao buscar chamados:', error);
@@ -70,7 +70,7 @@ module.exports.verificar_chamados_filtrados = (app, req, res) => {
         }
       });
     } else {
-      const filterquery = `WHERE ${filter} = '${filter_value}' AND u.id_usuario = ${req.session.user.id} `;
+      const filterquery = `WHERE ${filter} LIKE '%${filter_value}%' AND u.id_usuario = ${req.session.user.id} `;
       verificar_chamados_filtrados(dbConn, filterquery, (error, result) => {
         if (error) {
           console.error('Erro ao buscar chamados:', error);
