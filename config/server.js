@@ -13,7 +13,7 @@ const client = createClient();
 client.connect().catch(console.error);
 
 
-let port = 3000;
+let port = process.env.PORT || 3000;
 
 app.set("views", "./app/views");
 app.set("view engine", "ejs");
