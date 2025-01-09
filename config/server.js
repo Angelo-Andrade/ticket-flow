@@ -43,6 +43,7 @@ app.use((req, res, next) => {
     if (req.session && req.session.user) {
         res.locals.grad_post = req.session.user.grad_post || 'P/G';
         res.locals.war_name = req.session.user.war_name || 'Nome';
+        res.locals.user_type = req.session.user.user_type || 'comum';
     } else {
         res.locals.war_name = 'Visitante';
     }

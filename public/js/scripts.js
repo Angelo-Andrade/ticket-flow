@@ -1,3 +1,15 @@
+document.addEventListener("DOMContentLoaded", function() {
+    if(userType === 'comum') {
+        const adminOptions = document.querySelectorAll('.admin');
+        
+        adminOptions.forEach(option => {
+            option.remove();
+        });
+        console.log("Todas as opções de admin foram removidas.");
+    }
+});
+
+
 const inputTelefone = document.getElementById('telefone');
 inputTelefone.addEventListener('input', (event) => {
     let telefone = event.target.value;
