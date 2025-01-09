@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { excluir_chamado, verificar_chamados_todos, verificar_chamados_filtrados, criar_chamado, render_criar_chamados, render_erro_criar_chamados, alterar_chamado } = require('../controllers/chamados');
-const { render_conectar, autenticar, desconectar, render_criar_usuarios, cadastrarUsuario, render_erro_criar_usuarios, listar_usuarios, render_alterar_usuario, alterar_usuario, desativar_usuarios } = require('../controllers/usuarios');
+const { render_conectar, autenticar, desconectar, render_criar_usuarios, cadastrarUsuario, render_erro_criar_usuarios, listar_usuarios, render_alterar_usuario, alterar_usuario, desativar_usuarios, editar_perfil, render_editar_perfil } = require('../controllers/usuarios');
 
 const schemaCadastrarUsuario = Joi.object({
   nome_completo: Joi.string()
@@ -247,14 +247,15 @@ module.exports = {
   
   listar_usuarios: (app) => {
     app.get('/usuarios', function(req, res){
-      if(req.session.user) return listar_usuarios(app, req, res);
+      console.log('Rota de listar usuários');
+      if(req.session.user && req.session.user.user_type === 'admin') return listar_usuarios(app, req, res);
       res.redirect("/usuarios/conectar");
     });
   },
   
   render_editar_usuarios: (app) => {
     app.get('/usuarios/editar', function(req, res){
-      if(req.session.user) return render_alterar_usuario(app, req, res, [null, null]);
+      if(req.session.user && req.session.user.user_type === 'admin') return render_alterar_usuario(app, req, res, [null, null]);
       res.redirect("/usuarios/conectar");
     });
   },
@@ -263,7 +264,7 @@ module.exports = {
     app.post('/usuarios/editar', function(req, res){
       const invalidInput = [ req.query, validarDadosEditarUsuario(req, res)];
       console.log('[ROUTES cadastrar usuario] invalidInput: ', invalidInput);
-      if(!req.session.user) return res.redirect("/usuarios/conectar");
+      if(!req.session.user || !req.session.user.user_type === 'admin') return res.redirect("/usuarios/conectar");
       if(invalidInput[1]) return render_alterar_usuario(app, req, res, invalidInput);
       alterar_usuario(app, req, res);
     });
@@ -272,8 +273,27 @@ module.exports = {
   desativar_usuarios: (app) => {
     app.post('/usuarios/desativar', function(req, res){
       console.log('sim');
-      if(req.session.user) return desativar_usuarios(app, req, res);
+      if(req.session.user && req.session.user.user_type === 'admin') return desativar_usuarios(app, req, res);
       res.redirect("/usuarios/conectar");
+    });
+  },
+
+  render_editar_perfil: (app) => {
+    app.get('/editar_perfil', function(req, res){
+      console.log('Rota de editar perfil');
+      if(req.session.user) return render_editar_perfil(app, req, res, [null, null]);
+      res.redirect("/usuarios/conectar");
+    });
+    
+  },
+
+  editar_perfil: (app) => {
+    app.post('/editar_perfil', function(req, res){
+      const invalidInput = [ req.query, validarDadosEditarUsuario(req, res)];
+      console.log('[ROUTES editar perfil] invalidInput: ', invalidInput);
+      if(!req.session.user) return res.redirect("/usuarios/conectar");
+      if(invalidInput[1]) return render_editar_perfil(app, req, res, invalidInput);
+      editar_perfil(app, req, res);
     });
   },
 

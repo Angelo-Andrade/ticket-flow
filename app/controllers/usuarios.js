@@ -249,3 +249,53 @@ module.exports.desativar_usuarios = async (app, req, res) => {
     }
 }
 
+module.exports.render_editar_perfil = async (app, req, res, error) => {
+    console.log('[Controller usuarios] render editar perfil');
+    const id = req.session.user.id;
+    try {
+        dbConn = dbConnection();
+        const user = await getUserById(dbConn, id);
+        const posto_grad = await getPostoGrad(dbConn);
+        res.render('editar_perfil.ejs', { dados: user, posto_grads: posto_grad, error: error[1] });
+    } catch (error) {
+        console.log('[Controller usuarios] erro cadastrar usuario', error);
+        return res.status(500).render('notfound.ejs', {
+            errorMessage: 'Erro ao buscar dados: ' + error.sqlMessage
+        });
+    } finally {
+        if(dbConn) dbConnection.closeConnection(dbConn);
+    }
+}
+
+module.exports.editar_perfil = async (app, req, res) => {
+    console.log('[Controller usuarios] Editar Perfil');
+    id = req.session.user.id;
+    const { nome_completo, nome_guerra, telefone, email, novasenha, tipo, id_posto_grad } = req.body;
+    console.log('[Controller usuarios] req.body: ', req.body);
+    let hash = null;
+    if(novasenha) {
+        hash = await bcryptGenerateHash(novasenha);
+    }
+    console.log('[Controller usuarios] nova senha: ', novasenha);
+    console.log('[Controller usuarios] hash: ', hash);
+    
+    console.log(req.body, id);
+    
+    try {
+        dbConn = dbConnection();
+        await updateUser(dbConn, id, nome_completo, nome_guerra, telefone, email, hash, tipo, id_posto_grad, (error, result) =>{
+            if (error) {
+                console.error('Erro na consulta:', error);
+                res.redirect('/');
+            }
+        });
+        res.redirect('/');
+    } catch (error) {
+        console.log('[Controller usuarios] erro cadastrar usuario', error);
+        return res.status(500).render('notfound.ejs', {
+            errorMessage: 'Erro ao buscar dados: ' + error.sqlMessage
+        });
+    } finally {
+        if(dbConn) dbConnection.closeConnection(dbConn);
+    }
+}
