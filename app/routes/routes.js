@@ -231,7 +231,7 @@ module.exports = {
 
   render_criar_usuarios: (app) => {
     app.get('/usuarios/criar', function (req, res) {
-      if(req.session.user) return render_criar_usuarios(app, req, res);
+      if(req.session.user && req.session.user.user_type === 'admin') return render_criar_usuarios(app, req, res);
       res.redirect("/usuarios/conectar?error=auth_required");
     });
   },
@@ -239,7 +239,7 @@ module.exports = {
   cadastrar_usuarios: (app) => {
     app.post('/usuarios/cadastrar', function (req, res) {
       const invalidInput = validarDadosCadastrarUsuario(req, res);
-      if(!req.session.user) return res.redirect("/usuarios/conectar?error=auth_required");
+      if(!req.session.user || !req.session.user.user_type === 'admin') return res.redirect("/usuarios/conectar?error=auth_required");
       if(invalidInput) return render_erro_criar_usuarios(app, req, res, invalidInput);
       cadastrarUsuario(app, req, res);
     });
