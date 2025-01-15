@@ -12,6 +12,9 @@ const { createClient } = require('./cacheConnection');
 const client = createClient();
 client.connect().catch(console.error);
 
+client.on('error', (err) => {
+    console.error('Erro no Redis:', err);
+});
 
 let port = process.env.PORT || 3000;
 
