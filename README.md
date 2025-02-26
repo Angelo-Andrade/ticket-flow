@@ -9,6 +9,9 @@ The implementation of TicketFlow aims to eliminate communication noise, increase
 **Used Tecnologies:**
 The system was made in Model View Controller architecture, using JavaScript, HTML5 and CSS for FRONT-END and NodeJS for BACK-END. The tecnology used to store the tickets and users information was the relational database MySQL and the memory based database Redis. 
 
+---
+
+### Some software windows
 ![image](https://github.com/user-attachments/assets/9033b3b6-436a-4891-ab49-f5d51d6d52e0)
 
 ![image](https://github.com/user-attachments/assets/72685dbb-135d-4396-a3da-43bae3b54cfd)
