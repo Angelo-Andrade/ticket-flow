@@ -13,5 +13,5 @@ The system was made in Model View Controller architecture, using JavaScript, HTM
 
 ![image](https://github.com/user-attachments/assets/72685dbb-135d-4396-a3da-43bae3b54cfd)
 
-![image](https://github.com/user-attachments/assets/d9f861dd-42c1-40a7-b6b5-35006a061bac)
+![image](https://github.com/user-attachments/assets/ad7a7d8b-9644-4e5f-9b1c-19b5c43be107)
 
